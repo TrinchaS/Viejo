@@ -14,39 +14,68 @@
 </head>
 
 <body>
+    <div class="fondo">
+        <img class="img-fondo" src="./src/fondo.jpg" alt="Imagen de fondo">
+    </div>
+    <header>
+        <div class="nombre">
+            <p>César Rodrigo Rullán</p>
+        </div>
+        <div class="bt-login">
+            <button type="button" class="btn btn-primary">Login</button>
+        </div>
+        <div class="cuadro-bt-redSocial">
+            <img class="img-bt-redSocial" src="./src/ico-face.jpeg" alt="Icono Facebook">
+        </div>
+        <div class="cuadro-bt-redSocial">
+            <img class="img-bt-redSocial" src="./src/ico-insta.jpeg" alt="Icono Instagram">
+        </div>
+        <div class="cuadro-bt-redSocial">
+            <img class="img-bt-redSocial" src="./src/ico-twiter.jpeg" alt="Icono Twitter">
+        </div>
+        
+    </header>
+
     <div>
-        <div class="container-fluid">
-            <img src="./src/argProg1.png" alt="Argentina Programa #YO PROGRAMO">
+        <div class="cuadro-logo">
+            <img class="img-logo" src="./src/argProg.jpg" alt="Argentina Programa #YO PROGRAMO">
         </div>
 
-        <div>
-            <img src="./src/yo.jpg" alt="Foto Perfil">
+        <div class="cuadro-foto">
+            <img class="img-foto" src="./src/yo.jpg" alt="Foto Perfil">
         </div>
+    </div>
 
-        <div id="info-data">
-            <div id="info-contact">
+    <div class="card" id="card-Datos">
+            <div>
                 <h1>César Rodrigo Rullán</h1>
+                <hr>
+                Estudiante autodidacta de informática<br>
                 <span>Rosario (Argentina)</span>
-                <span>Información de contacto</span>
+                <a href="ubicacion">Información de contacto</a>
             </div>
 
-            <div id="info-details">
-                Tengo interés en
-                Añadir sección
-                Más
+            <div class="botones-perfil">
+                <button type="button" class="btn btn-primary">Tengo interés en</button>
+                <button type="button" class="btn btn-light">Añadir sección</button>
+                <button type="button" class="btn btn-light">Más</button>
             </div>
 
-            <div id="info-">
+            <div>
                 CONICET
                 Universidad
             </div>
     </div>
+
+    <div class="card" id="card-Acerca">
         <h2>Acerca de </h2>
+        <hr>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque accusamus, libero necessitatibus facere consequuntur id facilis fugit a aliquam odit, quidem quas quos repellat corrupti assumenda laborum. Distinctio, quod delectus.
     </div>
 
-    <div>
+    <div class="card" id="card-Experiencia" >
         <h2>Experiencia</h2>
+        <hr>
         <div>
             <h3>Puesto</h3>
             tiempo
@@ -64,8 +93,9 @@
         </div>
     </div>
 
-    <div>
+    <div class="card" id="card-Educacion">
         <h2>Educación</h2>
+        <hr>
         <div>
             <h3>Instituto</h3>
             Titulo
@@ -83,16 +113,18 @@
         </div>
     </div>
 
-    <div>
+    <div class="card" id="card-Habilidades">
         <h2>Hard Skills & Soft Skills</h2>
+        <hr>
         <div>
             descripción
             barra de progreso
         </div>
     </div>
 
-    <div>
+    <div class="card" id="card-Proyectos">
         <h2>Proyectos</h2>
+        <hr>
         <div>
             <h3>Nombre Proyecto</h3>
             Descripción
