@@ -17,67 +17,89 @@
     <div class="fondo">
         <img class="img-fondo" src="./src/fondo.jpg" alt="Imagen de fondo">
     </div>
-    <header>
+    <header class="titulo">
         <div class="nombre">
             <p>César Rodrigo Rullán</p>
         </div>
-        <div class="bt-login">
-            <button type="button" class="btn btn-primary">Login</button>
+        <div>
+            <div class="bt-login">
+                <button type="button" class="btn btn-primary">Login</button>
+            </div>
+            <div class="cuadro-bt-redSocial">
+                <a href="https://www.facebook.com/cesarodrullan">
+                    <img class="img-bt-redSocial" src="./src/ico-face.jpeg" alt="Icono Facebook">
+                </a>
+            </div>
+            <div class="cuadro-bt-redSocial">
+                <a href="https://wa.me/543413232069">
+                    <img class="img-bt-redSocial" src="./src/whatsapp.png" alt="Icono WhatsApp">
+                </a>
+            </div>
         </div>
-        <div class="cuadro-bt-redSocial">
-            <img class="img-bt-redSocial" src="./src/ico-face.jpeg" alt="Icono Facebook">
-        </div>
-        <div class="cuadro-bt-redSocial">
-            <img class="img-bt-redSocial" src="./src/ico-insta.jpeg" alt="Icono Instagram">
-        </div>
-        <div class="cuadro-bt-redSocial">
-            <img class="img-bt-redSocial" src="./src/ico-twiter.jpeg" alt="Icono Twitter">
-        </div>
-        
     </header>
 
-    <div>
-        <div class="cuadro-logo">
-            <img class="img-logo" src="./src/argProg.jpg" alt="Argentina Programa #YO PROGRAMO">
-        </div>
-
-        <div class="cuadro-foto">
-            <img class="img-foto" src="./src/yo.jpg" alt="Foto Perfil">
-        </div>
+    <div class="logo">
+        <img class="img-logo" src="./src/argProg.jpg" alt="Argentina Programa #YO PROGRAMO">
     </div>
-
-    <div class="card" id="card-Datos">
+    <div class="foto">
+        <img class="img-foto" src="./src/yo.jpg" alt="Foto Perfil">
+    </div>
+  
+    <div class="card">
             <div>
-                <h1>César Rodrigo Rullán</h1>
+                <div class="titulo">
+                    <h1>César Rodrigo Rullán</h1>
+                    <div class="lapiz-edit" onclick="edit_perfil()">
+                        <a href="#">
+                            <img class="img-lapiz-edit" src="./src/lapiz-edit.png" alt="Imagen lapiz-edit">
+                        </a>
+                    </div>
+                </div>
                 <hr>
                 Estudiante autodidacta de informática<br>
                 <span>Rosario (Argentina)</span>
-                <a href="ubicacion">Información de contacto</a>
             </div>
-
+            <br>
             <div class="botones-perfil">
                 <button type="button" class="btn btn-primary">Tengo interés en</button>
                 <button type="button" class="btn btn-light">Añadir sección</button>
                 <button type="button" class="btn btn-light">Más</button>
             </div>
+    </div>
 
-            <div>
-                CONICET
-                Universidad
+    <div class="card">
+        <div class="titulo">
+            <h2>Acerca de</h2>
+            <div class="lapiz-edit" onclick="edit_acerca('texto-acerca','input-acerca')">
+                <a href="#">
+                    <img class="img-lapiz-edit" src="./src/lapiz-edit.png" alt="Imagen lapiz-edit">
+                </a>
             </div>
-    </div>
-
-    <div class="card" id="card-Acerca">
-        <h2>Acerca de </h2>
+        </div>
         <hr>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque accusamus, libero necessitatibus facere consequuntur id facilis fugit a aliquam odit, quidem quas quos repellat corrupti assumenda laborum. Distinctio, quod delectus.
+        <p id="texto-acerca">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque accusamus, libero necessitatibus facere consequuntur id facilis fugit a aliquam odit, quidem quas quos repellat corrupti assumenda laborum. Distinctio, quod delectus.
+        </p>
+        <div>
+            <input id="input-acerca" type="text" oninput="f(this.value)" style="display:none;width: 100%">
+        </div>
+        
     </div>
 
-    <div class="card" id="card-Experiencia" >
-        <h2>Experiencia</h2>
+    <div class="card" >
+        <div class="titulo">
+            <h2>Experiencia</h2>
+            <div class="lapiz-edit" onclick="edit_exp()">
+                <a href="#">
+                    <img class="img-lapiz-edit" src="./src/agrega.png" alt="Imagen lapiz-edit">
+                </a>
+            </div>
+        </div>
         <hr>
         <div>
             <h3>Puesto</h3>
+            logo
+            empresa - jornada
             tiempo
             lugar
         </div>
@@ -93,8 +115,15 @@
         </div>
     </div>
 
-    <div class="card" id="card-Educacion">
-        <h2>Educación</h2>
+    <div class="card">
+        <div class="titulo">
+            <h2>Educación</h2>
+            <div class="lapiz-edit" onclick="edit_educacion()">
+                <a href="#">
+                    <img class="img-lapiz-edit" src="./src/agrega.png" alt="Imagen lapiz-edit">
+                </a>
+            </div>
+        </div>
         <hr>
         <div>
             <h3>Instituto</h3>
@@ -113,8 +142,15 @@
         </div>
     </div>
 
-    <div class="card" id="card-Habilidades">
-        <h2>Hard Skills & Soft Skills</h2>
+    <div class="card">
+        <div class="titulo">
+            <h2>Hard Skills & Soft Skills</h2>
+            <div class="lapiz-edit" onclick="edit_skill()">
+                <a href="#">
+                    <img class="img-lapiz-edit" src="./src/agrega.png" alt="Imagen lapiz-edit">
+                </a>
+            </div>
+        </div>
         <hr>
         <div>
             descripción
@@ -122,8 +158,15 @@
         </div>
     </div>
 
-    <div class="card" id="card-Proyectos">
-        <h2>Proyectos</h2>
+    <div class="card">
+        <div class="titulo">
+            <h2>Proyectos</h2>
+            <div class="lapiz-edit" onclick="edit_proyecto()">
+                <a href="#">
+                    <img class="img-lapiz-edit" src="./src/agrega.png" alt="Imagen lapiz-edit">
+                </a>
+            </div>
+        </div>
         <hr>
         <div>
             <h3>Nombre Proyecto</h3>
