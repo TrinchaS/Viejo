@@ -1,0 +1,33 @@
+  <!-- Carta Habilidades -->
+  <div class="card">
+    <div class="linea">
+        <h2>Habilidades</h2>
+        <a href="javascript:agregaSkill()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></a>
+    </div>
+    <hr>
+    <div style="width: 80%;margin-left: 10%;padding-bottom: 2%;">
+        <ul id="listadoHabilidades">
+            <li type="none" class="marco" *ngFor="let item of datos">
+                <div class="linea">
+                    <h5>{{item.habilidad}}</h5>
+                    <div>
+                        <a href="javascript:editHabilidad()"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></a>
+                        <a href="javascript:borraHabilidad()"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></a>
+                    </div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" [style]=item.porcentaje aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- Input Habilidades -->
+    <div id="inputHabilidades" class="marco" style="display:none;margin: -5px 2% 2%">
+        <h3>Ingreso datos Habilidades</h3>
+        <label for="nombreHabilidad">Nombre de la Habilidad</label>
+        <input type="text" id="inputNombreHabilidad">
+        <label for="porcentajeHabilidad">Porcentaje conocimiento</label>
+        <input type="text" id="inputPorcentajeHabilida">
+        <br>
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<!-- Carta Acerca -->
+<div class="card" id="acerca">
+    <div class="linea">
+        <h2>Acerca de</h2>
+        <a href="javascript:editAcerca()"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></a>
+    </div>
+    <hr>
+    <p id="textoAcerca" style="margin: -5px 2% 2%">
+        {{datos}}
+    </p>
+    <!-- Input Acerca-->
+    <div id="inputAcerca" class="marco" style="display:none;margin: -5px 2% 2%">
+        <h3>Ingreso datos Acerca</h3>
+        <label for="descripcionAcerca">Descripcion</label>
+        <input type="text" id="inputNombreEmpresa" oninput="escrituraContinua(this.value,'textoAcerca')">
+    </div>
+</div>

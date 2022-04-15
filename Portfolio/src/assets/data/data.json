@@ -1,0 +1,34 @@
+{
+    "presentacion":{
+        "nombre": "César Rodrigo Rullán",
+		"fNacimiento": "26/11/1982",
+		"urlFoto": "www......com",
+		"correo": "cesarodrullan@gmail.com",
+		"whatsapp": "https://wa.me/543413232069",
+		"facebook": "https://www.facebook.com/cesarodrullan",
+		"descripcion": "Estudiante autodidacta de informática, con conocimiento en leguajes funcionales, imperativos y orientado a objetos.",
+		"ubicacion": "Rosario (Argentina)"
+	},	
+	"acerca" : "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque accusamus, libero necessitatibus facere consequuntur id facilis fugit a aliquam odit, quidem quas quos repellat corrupti assumenda laborum. Distinctio, quod delectus.",
+	"experiencia" : [
+		{"puesto":"Puesto","empresa":"Nombre de la Empresa 1","jornal":"Tipo de jornal","fIngreso":"Fecha de ingreso","fEgreso":"Fecha de egreso","ubicacion":"Ubicacion"},
+		{"puesto":"Puesto","empresa":"Nombre de la Empresa 2","jornal":"Tipo de jornal","fIngreso":"Fecha de ingreso","fEgreso":"Fecha de egreso","ubicacion":"Ubicacion"}
+	],
+	"educacion" : [
+		{"instituto": "Nombre del Instituto 1","titulo":"Titulo","fIngreso":"Fecha de ingreso","fEgreso":"Fecha de egreso"},
+		{"instituto": "Nombre del Instituto 2","titulo":"Titulo","fIngreso":"Fecha de ingreso","fEgreso":"Fecha de egreso"},
+		{"instituto": "Nombre del Instituto 3","titulo":"Titulo","fIngreso":"Fecha de ingreso","fEgreso":"Fecha de egreso"}
+	],
+	"habilidades" : [
+		{"habilidad": "Nombre de la habilidad 1", "porcentaje": "width: 10%"},
+		{"habilidad": "Nombre de la habilidad 2", "porcentaje": "width: 60%"},
+		{"habilidad": "Nombre de la habilidad 3", "porcentaje": "width: 50%"},
+		{"habilidad": "Nombre de la habilidad 4", "porcentaje": "width: 75%"}
+	],
+	"proyectos" : [
+		{"nombre": "Nombre del proyecto 1","descripcion":"Descripcion del proyecto"},
+		{"nombre": "Nombre del proyecto 2","descripcion":"Descripcion del proyecto"},
+		{"nombre": "Nombre del proyecto 3","descripcion":"Descripcion del proyecto"}
+	]
+
+}

@@ -1,0 +1,37 @@
+  <!-- Carta Experiencia -->
+  <div class="card" >
+    <div class="linea">
+        <h2>Experiencia</h2>
+        <a href="javascript:agregaExperiencia()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></a>
+    </div>
+    <hr>
+    <ul id="listadoExperiencia">
+        <li type="none" class="marco" *ngFor="let item of datos">
+            <div class="linea">
+                <h3>{{item.puesto}}</h3>
+                <div class="linea" style="width: max-content;">
+                    <a href="javascript:editExperiencia()"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></a>
+                    <a href="javascript:borraExperiencia()"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></a>
+                </div>
+            </div>
+            <p> <span>{{item.empresa}}</span> -  {{item.jornal}}</p>
+            <p> {{item.fIngreso}} - {{item.fEgreso}} --- tiempo  </p>
+            <p> {{item.ubicacion}}</p>
+        </li>
+    </ul>
+    <!-- Input Experiencia -->
+    <div id="inputExperiencia" class="marco" style="display:none;margin: -5px 2% 2%">
+        <h3>Ingreso datos Experiencia</h3>
+        <label for="nombreEmpresa">Nombre de la Empresa</label>
+        <input type="text" id="inputNombreEmpresa">
+        <label for="tipoJornal">Tipo de jornada</label>
+        <input type="text" id="inputTipoJornal">
+        <label for="fechaIngresoEmpresa">Fecha de Ingreso</label>
+        <input type="text" id="inputFechaIngresoEmpresa">
+        <label for="fechaEngresoEmpresa">Fecha de Egreso</label>
+        <input type="text" id="inputFechaEgresoEmpresa">
+        <label for="ubicacionEmpresa">Ubicacion Empresa</label>
+        <input type="text" id="inputUbicacionEmpresa">
+        <br>
+    </div>
+</div>
