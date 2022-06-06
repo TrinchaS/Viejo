@@ -1,0 +1,14 @@
+<div class="card">
+    <div class="linea">
+        <h2>Acerca de</h2>
+        <button type="button" class="btn" (click)="muestraOculta('formAcerca')"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
+    </div>
+    <hr>
+    <p style="margin: -5px 2% 2%">{{datos.acerca}}</p>
+
+    <form [formGroup]="formularioAcerca" (ngSubmit)="actualiza()" id="formAcerca" class="marco" style="display:none;margin: -5px 2% 2%">
+        <h3>Ingreso de dato</h3>
+        <input type="text" formControlName="acerca">
+        <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Actualizar</button>
+    </form>
+</div>

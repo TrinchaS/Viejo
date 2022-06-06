@@ -1,0 +1,22 @@
+<!-- Barra de menu-->
+<nav class="navbar navbar-dark bg-dark" style="padding:0% 2%;position: sticky; top: 0; z-index: 10">
+    <div class="nav-item dropdown" style="font-size: 0px;">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <h3 style="color: white">{{datos.nombre}} {{datos.apellido}}</h3>
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <li><a class="dropdown-item" href="#presentation">Datos</a></li>
+          <li><a class="dropdown-item" href="#about">Acerca</a></li>
+          <li><a class="dropdown-item" href="#experience">Experiencia</a></li>
+          <li><a class="dropdown-item" href="#education">Educacion</a></li>
+          <li><a class="dropdown-item" href="#skill">Habilidades</a></li>
+          <li><a class="dropdown-item" href="#proyect">Proyectos</a></li>
+        </ul>
+    </div>
+    <div>
+        <a href="mailto:{{datos.email}}"><i class="bi bi-envelope" style="color: grey;font-size: 2em"></i></a>
+        <a href="https://wa.me/{{datos.whatsapp}}"><i class="bi bi-whatsapp" style="color: green;font-size: 2em; margin-left: 15px"></i></a>
+        <a href="https://www.facebook.com/{{datos.facebook}}"><i class="bi bi-facebook" style="color: #316ef3; font-size: 2em; margin-left: 15px"></i></a>
+        <button type="button" class="btn btn-outline-success" style="margin-top: -15px;margin-left: 1em" onclick="login()">Login</button>  
+    </div>
+</nav>

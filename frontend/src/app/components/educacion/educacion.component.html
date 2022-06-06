@@ -1,0 +1,43 @@
+<div class="card" id="educacion">
+    <div id="NombreDelInstituto">
+        <div class="linea">
+            <h2>Educación</h2>
+            <a href="#formEdu">
+                <button class="btn" (click)="agregaEducacion()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button>
+            </a>
+            
+        </div>
+        <ul>
+            <li type="none" class="marco" *ngFor="let item of datos">
+                <div class="linea">
+                    <h3>{{item.instituto}}</h3>
+                    <div>
+                        <a href="#formEdu">
+                            <button class="btn" (click)="editaEducacion(item.id)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
+                        </a>                        
+                        <a href="#formEdu">
+                            <button class="btn" (click)="borraEducacion(item.id)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
+                        </a>
+                    </div>
+                </div>
+                <h5>{{item.titulo}}</h5>
+                {{item.fingreso}} al {{item.fegreso}}
+            </li>
+        </ul>
+    </div>
+    
+    <!-- formulario Educacion -->
+    <a name="formEdu"></a>
+    <form [formGroup]="formularioEducacion" (ngSubmit)="ejecuta()" id="formEducacion" class="marco" style="display:none;margin: -5px 2% 2%">
+        <h3>Ingreso datos de Educacion</h3>
+        <label>Nombre del Instituto</label>
+        <input type="text" formControlName="instituto">
+        <label>Titulo</label>
+        <input type="text" formControlName="titulo">
+        <label>Fecha de Ingreso</label>
+        <input type="text" formControlName="fIngreso">
+        <label>Fecha de Egreso</label>
+        <input type="text" formControlName="fEgreso">
+        <button type="submit" id="botonEdu" class="btn btn-primary" style="margin-top: 1%;">Boton</button>
+    </form>
+</div>
