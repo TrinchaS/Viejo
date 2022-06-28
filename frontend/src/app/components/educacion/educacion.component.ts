@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { educacion } from 'src/app/model/educacion.model';
@@ -9,9 +10,11 @@ import { EducacionService } from 'src/app/service/educacion.service';
   styleUrls: ['./educacion.component.css']
 })
 export class EducacionComponent implements OnInit {
-  private ids = ["18","19","20"]; //sacamos este valor de la tabla persona
 
-  datos :educacion [] = [];
+  public datos :educacion [] = [];
+
+  public editEducation: educacion | undefined;
+  public deleteEducation: educacion | undefined;
   
   formularioEducacion :FormGroup;
 
@@ -22,31 +25,44 @@ export class EducacionComponent implements OnInit {
 
   constructor(public eduService :EducacionService, public builder :FormBuilder) {
     this.formularioEducacion = this.builder.group({
-      instituto :[''],
-      titulo :[''],
-      fIngreso :[''],
-      fEgreso :['']
+      institutoEdu :[''],
+      tituloEdu :[''],
+      fingresoEdu :[''],
+      fegresoEdu :['']
     });
   }
 
   ngOnInit(): void {
-    let rta = this.eduService.allEducacion(this.ids);
-    for(let r = 0; r < rta.length; r++){
-      this.datos[r] = new educacion("","","","");
-      rta[r].subscribe(data => {this.datos[r] = data});
-    }
+    this.getEducacion();
+  }
+
+  public getEducacion(){
+    this.eduService.allEducacion().subscribe({
+      next:(Response: educacion[])=>{
+        this.datos=Response;
+      },
+      error:(error:HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
   }
 
   ejecuta(){
     switch(this.estadoEdu){
       case 1:
-        console.log("Agregado");
+        console.log("Agregando");
+        this.confirmaAgrega();
+        this.estadoIdEdu=0;
         break;
       case 2:
-        console.log("Editado");
+        console.log("Editando");
+        this.confirmaEdita();
+        this.estadoIdEdu=0;
         break;
       case 3:
-        console.log("Eliminado");
+        console.log("Eliminando");
+        this.confirmaElimina();
+        this.estadoEdu = 0;
         break;
       default:
         break;
@@ -117,17 +133,71 @@ export class EducacionComponent implements OnInit {
   }
 
   private rellena(id :number){
-    let x = this.ids.findIndex(r => r == String(id));
-    this.formularioEducacion.controls['instituto'].setValue(this.datos[x].instituto);
-    this.formularioEducacion.controls['titulo'].setValue(this.datos[x].titulo);
-    this.formularioEducacion.controls['fIngreso'].setValue(this.datos[x].fingreso);
-    this.formularioEducacion.controls['fEgreso'].setValue(this.datos[x].fegreso);
+    let x=0;
+    for(let d=0;d<this.datos.length;d++){
+      if (this.datos[d].idEdu == id){x=d}
+    }
+    this.formularioEducacion.controls['institutoEdu'].setValue(this.datos[x].institutoEdu);
+    this.formularioEducacion.controls['tituloEdu'].setValue(this.datos[x].tituloEdu);
+    this.formularioEducacion.controls['fingresoEdu'].setValue(this.datos[x].fingresoEdu);
+    this.formularioEducacion.controls['fegresoEdu'].setValue(this.datos[x].fegresoEdu);
   }
 
   private limpia(){
-    this.formularioEducacion.controls['instituto'].setValue('');
-    this.formularioEducacion.controls['titulo'].setValue('');
-    this.formularioEducacion.controls['fIngreso'].setValue('');
-    this.formularioEducacion.controls['fEgreso'].setValue('');
+    this.formularioEducacion.controls['institutoEdu'].setValue('');
+    this.formularioEducacion.controls['tituloEdu'].setValue('');
+    this.formularioEducacion.controls['fingresoEdu'].setValue('');
+    this.formularioEducacion.controls['fegresoEdu'].setValue('');
+  }
+
+  confirmaElimina(){
+    this.eduService.deleteEducacion(this.estadoIdEdu).subscribe({
+      next: (response: void) => {
+        console.log(response);
+        this.getEducacion();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+  }
+
+  confirmaEdita(){
+    let edu :educacion = new educacion(
+      this.formularioEducacion.controls['institutoEdu'].value ,
+      this.formularioEducacion.controls['tituloEdu'].value,
+      this.formularioEducacion.controls['fingresoEdu'].value,
+      this.formularioEducacion.controls['fegresoEdu'].value,
+      this.estadoIdEdu);
+
+    this.eduService.updateEducacion(edu).subscribe({
+      next: (response: educacion) => {
+        console.log(response);
+        this.getEducacion();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+  }
+
+  confirmaAgrega(){
+    let edu :educacion = new educacion(
+      this.formularioEducacion.controls['institutoEdu'].value ,
+      this.formularioEducacion.controls['tituloEdu'].value,
+      this.formularioEducacion.controls['fingresoEdu'].value,
+      this.formularioEducacion.controls['fegresoEdu'].value,
+    );
+
+    this.eduService.addEducacion(edu).subscribe({
+      next: (response: educacion) => {
+        console.log(response);
+        this.getEducacion();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+
   }
 }

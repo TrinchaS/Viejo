@@ -5,11 +5,18 @@ import backend.repository.PersonaRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class PersonaService implements IPersonaService{
+    
+    private final PersonaRepository perRepo;
+    
     @Autowired
-    private PersonaRepository perRepo;
+    public PersonaService(PersonaRepository perRepo){
+        this.perRepo = perRepo;
+    }
     
     @Override
     public List<Persona> verPersonas() {
@@ -22,8 +29,8 @@ public class PersonaService implements IPersonaService{
     }
 
     @Override
-    public void guardarPersona(Persona nueva) {
-        perRepo.save(nueva);
+    public Persona guardarPersona(Persona nueva) {
+        return perRepo.save(nueva);
     }
 
     @Override

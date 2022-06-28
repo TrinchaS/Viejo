@@ -1,43 +1,39 @@
 package backend.modelo;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-public class Experiencia {
+public class Experiencia implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
-    @NotNull
-    private String puesto;
-    @NotNull
-    private String empresa;
-    @NotNull
-    private String jornada;
-    
-    private String fIngreso;
-    private String fEgreso;
-    private String ubicacion;
-    private String pais;
+    private Long idExp;
+    private String puestoExp;
+    private String empresaExp;
+    private String jornadaExp;
+    private String fingresoExp;
+    private String fegresoExp;
+    private String ubicacionExp;
+    private String paisExp;
+    private String descripcionExp;
     
     public Experiencia(){}
-    
-    public Experiencia(Long id, String puesto, String empresa, String jornada,
-            String fIngreso, String fEgreso, String ubicacion, String pais){
-        this.id = id;
-        this.puesto = puesto;
-        this.empresa = empresa;
-        this.jornada = jornada;
-        this.fIngreso = fIngreso;
-        this.fEgreso = fEgreso;
-        this.ubicacion = ubicacion;
-        this.pais = pais;
+
+    public Experiencia(Long idExp, String puestoExp, String empresaExp, String jornadaExp, String fingresoExp, String fegresoExp, String ubicacionExp, String paisExp, String descripcionExp) {
+        this.idExp = idExp;
+        this.puestoExp = puestoExp;
+        this.empresaExp = empresaExp;
+        this.jornadaExp = jornadaExp;
+        this.fingresoExp = fingresoExp;
+        this.fegresoExp = fegresoExp;
+        this.ubicacionExp = ubicacionExp;
+        this.paisExp = paisExp;
+        this.descripcionExp = descripcionExp;
     }
 }

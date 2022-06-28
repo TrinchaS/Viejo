@@ -1,39 +1,33 @@
-<a name="habilidad"></a>
 <div class="card">
     <div class="linea">
         <h2>Habilidades</h2>
-        <a href="#formHab">
-            <button class="btn" (click)="agregaHabilidad()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button>
-        </a>      
+        <button type="button" class="btn" (click)="agregaHabilidad()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button>
     </div>
     <hr>
     <div style="width: 80%;margin-left: 10%;padding-bottom: 2%;">
         <ul>
             <li type="none" class="marco" *ngFor="let item of datos">
                 <div class="linea">
-                    <h5>{{item.nombre}}</h5>
+                    <h5>{{item.nombreHab}}</h5>
                     <div>
-                        <a href="#formHab">
-                            <button class="btn" (click)="editaHabilidad(item.id)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
-                        </a>
-                        <a href="#formHab">
-                            <button class="btn" (click)="borraHabilidad(item.id)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
-                        </a>
-                        
+                        <button type="button" class="btn" (click)="editaHabilidad(item.idHab)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
+                        <button type="button" class="btn" (click)="borraHabilidad(item.idHab)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
                     </div>
                 </div>
-                <mat-progress-bar mode="determinate" value={{item.porcentaje}} style="height: 20px; border-radius: 5px;"></mat-progress-bar>
+                <mat-progress-bar mode="determinate" value={{item.porcentajeHab}} style="height: 20px; border-radius: 5px;"></mat-progress-bar>
             </li>
         </ul>
     </div>
+
     <!-- Input Habilidades -->
     <a name="formHab"></a>
     <form [formGroup]="formularioHabilidad" (ngSubmit)="ejecuta()" id="formHabilidad" class="marco" style="display:none;margin: -5px 2% 2%">
         <h3>Ingreso datos Habilidades</h3>
         <label>Nombre de la Habilidad</label>
-        <input type="text" formControlName="nombre">
+        <input type="text" formControlName="nombreHab">
         <label>Porcentaje de conocimiento</label>
-        <input type="text" formControlName="porcentaje">
+        <input type="text" formControlName="porcentajeHab">
         <button type="submit" id="botonHab" class="btn btn-primary" style="margin-top: 1%;">Boton</button>
     </form>
+    
 </div>

@@ -1,10 +1,11 @@
 export class habilidad{
-    id?: number;
-    nombre: String;
-    porcentaje: String;
+    idHab?: number;
+    nombreHab: String;
+    porcentajeHab: String;
 
-    constructor(nombre: String, porcentaje :String){
-        this.nombre = nombre;
-        this.porcentaje = porcentaje;
+    constructor(nombre: String, porcentaje :String, id?: number){
+        this.nombreHab = nombre;
+        this.porcentajeHab = porcentaje;
+        this.idHab = id;
     }
 }

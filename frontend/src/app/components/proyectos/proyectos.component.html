@@ -1,38 +1,33 @@
-  <!-- Carta Proyectos -->
-  <div class="card">
+<div class="card">
     <div class="linea">
-        <h2>Proyectos</h2>
-        <a href="#formPro">
-           <button class="btn" (click)="agregaProyecto()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button> 
-        </a>
+    <h2>Proyectos</h2>
+        <button type="button" class="btn" (click)="agregaProyecto()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button> 
     </div>
     <hr>
     <ul>
         <li type="none" class="marco" *ngFor="let item of datos">
             <div class="linea">
-                <h3>{{item.nombre}}</h3>
+                <h3>{{item.nombrePro}}</h3>
                 <div>
-                    <a href="#formPro">
-                        <button class="btn" (click)="editaProyecto(item.id)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
-                    </a>
-                    <a href="#formPro">
-                        <button class="btn" (click)="borraProyecto(item.id)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
-                    </a>
+                    <button type="button" class="btn" (click)="editaProyecto(item.idPro)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
+                    <button type="button" class="btn" (click)="borraProyecto(item.idPro)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
                 </div>
             </div>
-            <p>{{item.descripcion}}</p>
+            <a href={{item.urlPro}} target="_blank"> Link</a>
+            <p>{{item.descripcionPro}}</p>
         </li>
     </ul>
+
     <!-- Input Proyecto -->
-    <a name="formPro"></a>
     <form [formGroup]="formularioProyecto" (ngSubmit)="ejecuta()" id="formProyecto" class="marco" style="display:none;margin: -5px 2% 2%">
         <h3>Ingreso datos Proyecto</h3>
         <label>Nombre del Proyecto</label>
-        <input type="text" formControlName="nombreProyecto">
+        <input type="text" formControlName="nombrePro">
         <label>URL</label>
-        <input type="text" formControlName="urlProyecto">
+        <input type="text" formControlName="urlPro">
         <label>Descripcion</label>
-        <input type="text" formControlName="descripcionProyecto">
+        <input type="text" formControlName="descripcionPro">
         <button type="submit" id="botonPro" class="btn btn-primary" style="margin-top: 1%;">Boton</button>
     </form>
+
 </div>

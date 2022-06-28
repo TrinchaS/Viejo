@@ -5,11 +5,18 @@ import backend.repository.ExperienciaRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class ExperienciaService implements IExperienciaService{
+    
+    private final ExperienciaRepository expRepo;
+    
     @Autowired
-    ExperienciaRepository expRepo;
+    public ExperienciaService(ExperienciaRepository expRepo){
+        this.expRepo = expRepo;
+    }
 
     @Override
     public List<Experiencia> verExperiencias() {
@@ -22,8 +29,8 @@ public class ExperienciaService implements IExperienciaService{
     }
 
     @Override
-    public void guardarExperiencia(Experiencia nueva) {
-        expRepo.save(nueva);
+    public Experiencia guardarExperiencia(Experiencia nueva) {
+        return expRepo.save(nueva);
     }
 
     @Override

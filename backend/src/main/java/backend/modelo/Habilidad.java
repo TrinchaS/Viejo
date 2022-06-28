@@ -1,34 +1,27 @@
 package backend.modelo;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-public class Habilidad {
+public class Habilidad implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    
-    @NotNull
-    @Size(min=3,max=20,message="El nombre de la Habilidad no cumple con la longitud (3,20)")
-    private String nombre;
-    
-    @NotNull
-    private String porcentaje;
+    private Long idHab;
+    private String nombreHab;
+    private String porcentajeHab;
 
     public Habilidad() {}
-    
-    public Habilidad(Long id, String nombre, String porcentaje){
-        this.id = id;
-        this.nombre = nombre;
-        this.porcentaje = porcentaje;
-    }
-    
+
+    public Habilidad(Long idHab, String nombreHab, String porcentajeHab) {
+        this.idHab = idHab;
+        this.nombreHab = nombreHab;
+        this.porcentajeHab = porcentajeHab;
+    }    
 }

@@ -1,30 +1,29 @@
 package backend.modelo;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 @Entity
-public class Proyecto {
+public class Proyecto implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    @NotNull
-    private String nombre;
-    private String url;
-    private String descripcion;
+    private Long idPro;
+    private String nombrePro;
+    private String urlPro;
+    private String descripcionPro;
     
     public Proyecto(){}
-    
-    public Proyecto(Long id, String nombre, String url, String descripcion){
-        this.id = id;
-        this.nombre = nombre;
-        this.url = url;
-        this.descripcion = descripcion;        
+
+    public Proyecto(Long idPro, String nombrePro, String urlPro, String descripcionPro) {
+        this.idPro = idPro;
+        this.nombrePro = nombrePro;
+        this.urlPro = urlPro;
+        this.descripcionPro = descripcionPro;
     }
 }

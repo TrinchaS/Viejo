@@ -1,14 +1,15 @@
 export class educacion{
-    id?: number;
-    instituto: String;
-    titulo: String;
-    fingreso: String;
-    fegreso: String;
+    idEdu?: number;
+    institutoEdu: string;
+    tituloEdu: string;
+    fingresoEdu: string;
+    fegresoEdu: string;
 
-    constructor(instituto: String, titulo: String, fIngreso: String, fEgreso: String){
-        this.instituto = instituto;
-        this.titulo = titulo;
-        this.fingreso = fIngreso;
-        this.fegreso = fEgreso;
+    constructor (institutoEdu: string, tituloEdu: string, fingresoEdu: string, fegresoEdu: string, idEdu?: number) {
+        this.institutoEdu = institutoEdu;
+        this.tituloEdu = tituloEdu;
+        this.fingresoEdu = fingresoEdu;
+        this.fegresoEdu = fegresoEdu;
+        this.idEdu = idEdu;
     }
 }

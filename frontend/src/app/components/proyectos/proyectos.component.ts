@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { proyecto } from 'src/app/model/proyecto.model';
@@ -9,7 +10,6 @@ import { ProyectoService } from 'src/app/service/proyecto.service';
   styleUrls: ['./proyectos.component.css']
 })
 export class ProyectosComponent implements OnInit{
-  private ids = ["24","25"];//sacamos este valor de la tabla persona(agregar)
 
   datos :proyecto[] = [];
 
@@ -22,30 +22,43 @@ export class ProyectosComponent implements OnInit{
 
   constructor(public proService: ProyectoService, public builder :FormBuilder) {
     this.formularioProyecto = this.builder.group({
-      nombreProyecto : [''],
-      urlProyecto : [''],
-      descripcionProyecto : ['']
+      nombrePro : [''],
+      urlPro : [''],
+      descripcionPro : ['']
     })
   }
 
   ngOnInit(): void {
-    let rta = this.proService.allProyecto(this.ids);
-    for(let r = 0; r < rta.length; r++){
-      this.datos[r] = new proyecto("","","");
-      rta[r].subscribe(data => {this.datos[r] = data});
-    }
+    this.getProyecto();
+  }
+
+  getProyecto(){
+    this.proService.allProyecto().subscribe({
+      next:(response: proyecto[])=>{
+        this.datos=response;
+      },
+      error:(error:HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
   }
 
   ejecuta(){
     switch(this.estadoPro){
       case 1:
         console.log("Agregado");
+        this.confirmaAgrega();
+        this.estadoIdPro = 0;
         break;
       case 2:
         console.log("Editado");
+        this.confirmaEdita();
+        this.estadoIdPro = 0;
         break;
       case 3:
         console.log("Eliminado");
+        this.confirmaElimina();
+        this.estadoIdPro;
         break;
       default:
         break;
@@ -116,16 +129,66 @@ export class ProyectosComponent implements OnInit{
   }
 
   private rellena(id :number){
-    let x = this.ids.findIndex(r => r == String(id));
-    this.formularioProyecto.controls['nombreProyecto'].setValue(this.datos[x].nombre);
-    this.formularioProyecto.controls['urlProyecto'].setValue(this.datos[x].url);
-    this.formularioProyecto.controls['descripcionProyecto'].setValue(this.datos[x].descripcion);
+    let x=0;
+    for(let d=0;d<this.datos.length;d++){
+      if (this.datos[d].idPro == id){x=d}
+    }
+    this.formularioProyecto.controls['nombrePro'].setValue(this.datos[x].nombrePro);
+    this.formularioProyecto.controls['urlPro'].setValue(this.datos[x].urlPro);
+    this.formularioProyecto.controls['descripcionPro'].setValue(this.datos[x].descripcionPro);
   }
 
   private limpia(){
-    this.formularioProyecto.controls['nombreProyecto'].setValue('');
-    this.formularioProyecto.controls['urlProyecto'].setValue('');
-    this.formularioProyecto.controls['descripcionProyecto'].setValue('');
-
+    this.formularioProyecto.controls['nombrePro'].setValue('');
+    this.formularioProyecto.controls['urlPro'].setValue('');
+    this.formularioProyecto.controls['descripcionPro'].setValue('');
   }
+
+  confirmaAgrega(){
+    let pro :proyecto = new proyecto(
+      this.formularioProyecto.controls['nombrePro'].value,
+      this.formularioProyecto.controls['urlPro'].value,
+      this.formularioProyecto.controls['descripcionPro'].value
+    );
+    this.proService.addProyecto(pro).subscribe({
+      next: (response: proyecto) => {
+        console.log(response);
+        this.getProyecto();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+  }
+
+  confirmaEdita(){
+    let pro :proyecto = new proyecto(
+      this.formularioProyecto.controls['nombrePro'].value,
+      this.formularioProyecto.controls['urlPro'].value,
+      this.formularioProyecto.controls['descripcionPro'].value,
+      this.estadoIdPro
+    );
+    this.proService.updateProyecto(pro).subscribe({
+      next: (response: proyecto) => {
+        console.log(response);
+        this.getProyecto();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+  }
+
+  confirmaElimina(){
+    this.proService.deleteProyecto(this.estadoIdPro).subscribe({
+      next: (response: void) => {
+        console.log(response);
+        this.getProyecto();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+  }
+
 }

@@ -5,11 +5,18 @@ import backend.repository.HabilidadRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class HabilidadService implements IHabilidadService{
-    @Autowired 
-    private HabilidadRepository habRepo;
+        
+    private final HabilidadRepository habRepo;
+    
+    @Autowired
+    public HabilidadService(HabilidadRepository habRepo){
+        this.habRepo = habRepo;
+    }
 
     @Override
     public List<Habilidad> verHabilidades() {
@@ -22,8 +29,8 @@ public class HabilidadService implements IHabilidadService{
     }
 
     @Override
-    public void guardarHabilidad(Habilidad nueva) {
-        habRepo.save(nueva);
+    public Habilidad guardarHabilidad(Habilidad nueva) {
+        return habRepo.save(nueva);
     }
 
     @Override

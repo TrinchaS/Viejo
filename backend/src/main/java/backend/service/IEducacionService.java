@@ -6,6 +6,6 @@ import java.util.List;
 public interface IEducacionService {
     public List<Educacion> verEducaciones();
     public Educacion buscarEducacion(Long id);
-    public void guardarEducacion(Educacion nueva);
+    public Educacion guardarEducacion(Educacion nueva);
     public void borrarEducacion(Long id);
 }

@@ -2,9 +2,10 @@ package backend.controller;
 
 import backend.modelo.Experiencia;
 import backend.service.ExperienciaService;
-import java.time.LocalDate;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,57 +13,48 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200/")
+@RequestMapping("/experiencia")
 public class ExperienciaController {
     
+    private final ExperienciaService expService; 
+    
     @Autowired
-    private ExperienciaService expService;
+    public ExperienciaController(ExperienciaService expService){
+        this.expService = expService;
+    }
     
     @GetMapping("/verExperiencias")
-    public List<Experiencia> verExperiencias(){
-        return expService.verExperiencias();
+    public ResponseEntity<List<Experiencia>> verExperiencias(){
+        List<Experiencia> rta = expService.verExperiencias();
+        return new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
     @PostMapping("/creaExperiencia")
-    public String crearExperiencia(@RequestBody Experiencia nueva){
-        expService.guardarExperiencia(nueva);
-        return "Experiencia creada.";
+    public ResponseEntity<Experiencia> crearExperiencia(@RequestBody Experiencia nueva){
+        Experiencia rta = expService.guardarExperiencia(nueva);
+        return new ResponseEntity<>(rta,HttpStatus.CREATED);
     }
     
     @GetMapping("/buscaExperiencia/{id}")
-    public Experiencia buscaExperiencia(@PathVariable Long id){
-        return expService.buscarExperiencia(id);
+    public ResponseEntity<Experiencia> buscaExperiencia(@PathVariable("id") Long id){
+        Experiencia rta = expService.buscarExperiencia(id);
+        return new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
     @PutMapping("/editaExperiencia")
-    public String editaExperiencia(@PathVariable Long id,
-                             @RequestParam("puesto") String nuevoPuesto,
-                             @RequestParam("empresa") String nuevaEmpresa,
-                             @RequestParam("jornada") String nuevaJornada,
-                             @RequestParam("fIngreso") String nuevafIngreso,
-                             @RequestParam("fEgreso") String nuevafEgreso,
-                             @RequestParam("ubicacion") String nuevaUbicacion,
-                             @RequestParam("pais") String nuevoPais){
-        Experiencia nueva = expService.buscarExperiencia(id);
-        nueva.setPuesto(nuevoPuesto);
-        nueva.setEmpresa(nuevaEmpresa);
-        nueva.setJornada(nuevaJornada);
-        nueva.setFIngreso(nuevafIngreso);
-        nueva.setFEgreso(nuevafEgreso);
-        nueva.setUbicacion(nuevaUbicacion);
-        nueva.setPais(nuevoPais);
-        expService.guardarExperiencia(nueva);
-        return "Experiencia Editada.";
+    public ResponseEntity<Experiencia> editaExperiencia(@RequestBody Experiencia nueva){
+        Experiencia rta = expService.guardarExperiencia(nueva);
+        return new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
     @DeleteMapping("/borrarExperiencia/{id}")
-    public String borrarExperiencia(@PathVariable Long id){
+    public ResponseEntity <?> borrarExperiencia(@PathVariable("id") Long id){
         expService.borrarExperiencia(id);
-        return "Experiencia Borrada.";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-    
 }

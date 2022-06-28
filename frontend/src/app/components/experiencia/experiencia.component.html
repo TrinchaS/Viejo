@@ -1,50 +1,45 @@
-<a name="experiencia"></a>
 <div class="card" >
     <div class="linea">
         <h2>Experiencia</h2>
-        <a href="#formExp">
-            <button class="btn" (click)="agregaExperiencia()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button>
-        </a> 
+        <button type="button" class="btn" (click)="agregaExperiencia()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button>
     </div>
     <hr>
     <ul>
         <li type="none" class="marco" *ngFor="let item of datos">
             <div class="linea">
-                <h3>{{item.puesto}}</h3>
+                <h3>{{item.puestoExp}}</h3>
                 <div class="linea" style="width: max-content;">
-                    <a href="#formExp">
-                        <button class="btn" (click)="editaExperiencia(item.id)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
-                    </a>
-                    <a href="#formExp">
-                        <button class="btn" (click)="borraExperiencia(item.id)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
-                    </a>
+                    <button type="button" class="btn" (click)="editaExperiencia(item.idExp)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
+                    <button type="button" class="btn" (click)="borraExperiencia(item.idExp)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
                 </div>
             </div>
-            <p> <span>{{item.empresa}}</span> -  {{item.jornada}}</p>
-            <p> {{item.fingreso}}  al  {{item.fegreso}} --- Calcular tiempo  </p>
-            <p> {{item.ubicacion}} ({{item.pais}})</p>
+            <p> <span>{{item.empresaExp}}</span> -  {{item.jornadaExp}} </p>
+            <p> {{item.fingresoExp}}  al  {{item.fegresoExp}}  </p>
+            <p> {{item.ubicacionExp}} ({{item.paisExp}})</p>
+            <span><u>Descripción:</u></span>
+            <p>{{item.descripcionExp}}</p>
         </li>
     </ul>
+
     <!-- Formulario Experiencia -->
-    <a name="formExp"></a>
     <form [formGroup]="formularioExperiencia" (ngSubmit)="ejecuta()" id="formExperiencia" class="marco" style="display:none;margin: -5px 2% 2%">
         <h3>Ingreso datos Experiencia</h3>
         <label>Nombre de la Empresa</label>
-        <input type="text" formControlName="nombreEmpresa">
+        <input type="text" formControlName="empresaExp">
         <label>Puesto</label>
-        <input type="text" formControlName="puesto">
+        <input type="text" formControlName="puestoExp">
         <label>Tipo de jornada</label>
-        <input type="text" formControlName="tipoJornal">
+        <input type="text" formControlName="jornadaExp">
         <label>Fecha de Ingreso</label>
-        <input type="text" formControlName="fechaIngresoEmpresa">
+        <input type="text" formControlName="fingresoExp">
         <label>Fecha de Egreso</label>
-        <input type="text" formControlName="fechaEgresoEmpresa">
+        <input type="text" formControlName="fegresoExp">
         <label>Ubicacion Empresa</label>
-        <input type="text" formControlName="ubicacionEmpresa">
+        <input type="text" formControlName="ubicacionExp">
         <label>Pais de la Empresa</label>
-        <input type="text" formControlName="paisEmpresa">
-        <a href="#experiencia">
-            <button type="submit" id="botonExp" class="btn btn-primary" style="margin-top: 1%;">Boton</button>
-        </a>
+        <input type="text" formControlName="paisExp">
+        <label>Descripción</label>
+        <input type="text" formControlName="descripcionExp">
+        <button type="submit" id="botonExp" class="btn btn-primary" style="margin-top: 1%;">Boton</button>
     </form>
 </div>

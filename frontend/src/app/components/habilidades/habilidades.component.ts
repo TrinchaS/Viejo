@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { habilidad } from 'src/app/model/habilidad.model';
@@ -9,9 +10,6 @@ import { HabilidadService } from 'src/app/service/habilidad.service';
   styleUrls: ['./habilidades.component.css']
 })
 export class HabilidadesComponent implements OnInit {
-
-  private ids = ["21","22","23"];//sacamos este valor de la tabla persona(agregar)
-
   aux :string[] = [];
 
   datos :habilidad[] = [];
@@ -25,29 +23,42 @@ export class HabilidadesComponent implements OnInit {
 
   constructor(public habService: HabilidadService, public builder :FormBuilder) {
     this.formularioHabilidad = this.builder.group({
-      nombre : [''],
-      porcentaje : ['']
+      nombreHab : [''],
+      porcentajeHab : ['']
     })
    }
 
   ngOnInit(): void {
-    let rta = this.habService.allHabilidad(this.ids);
-    for(let r = 0; r < rta.length; r++){
-      this.datos[r] = new habilidad("","");
-      rta[r].subscribe(data => {this.datos[r] = data});
-    }
+   this.getHabilidad();
+  }
+
+  getHabilidad(){
+    this.habService.allHabilidad().subscribe({
+      next:(Response: habilidad[])=>{
+        this.datos=Response;
+      },
+      error:(error:HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
   }
 
   ejecuta(){
     switch(this.estadoHab){
       case 1:
         console.log("Agregado");
+        this.confirmaAgrega();
+        this.estadoIdHab = 0;
         break;
       case 2:
         console.log("Editado");
+        this.confirmaEdita();
+        this.estadoIdHab = 0;
         break;
       case 3:
         console.log("Eliminado");
+        this.confirmaElimina();
+        this.estadoHab = 0;
         break;
       default:
         break;
@@ -93,6 +104,8 @@ export class HabilidadesComponent implements OnInit {
       this.renombraBoton('Eliminar');
       this.rellena(id);
       this.muestra("formHabilidad");
+      this.formularioHabilidad.controls['nombreHab'].disable;
+      this.formularioHabilidad.controls['porcentajeHab'];
     }
   }
 
@@ -118,14 +131,62 @@ export class HabilidadesComponent implements OnInit {
   }
 
   private rellena(id :number){
-    let x = this.ids.findIndex(r => r == String(id));
-    this.formularioHabilidad.controls['nombre'].setValue(this.datos[x].nombre);
-    this.formularioHabilidad.controls['porcentaje'].setValue(this.datos[x].porcentaje);
+    let x=0;
+    for(let d=0;d<this.datos.length;d++){
+      if (this.datos[d].idHab == id){x=d}
+    }
+    this.formularioHabilidad.controls['nombreHab'].setValue(this.datos[x].nombreHab);
+    this.formularioHabilidad.controls['porcentajeHab'].setValue(this.datos[x].porcentajeHab);
   }
 
   private limpia(){
-    this.formularioHabilidad.controls['nombre'].setValue('');
-    this.formularioHabilidad.controls['porcentaje'].setValue('');
+    this.formularioHabilidad.controls['nombreHab'].setValue('');
+    this.formularioHabilidad.controls['porcentajeHab'].setValue('');
   }
 
+  confirmaAgrega(){
+    let hab :habilidad = new habilidad(
+      this.formularioHabilidad.controls['nombreHab'].value,
+      this.formularioHabilidad.controls['porcentajeHab'].value
+    );
+    this.habService.addHabilidad(hab).subscribe({
+      next: (response: habilidad) => {
+        console.log(response);
+        this.getHabilidad();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+  }
+
+  confirmaEdita(){
+    let hab :habilidad = new habilidad(
+      this.formularioHabilidad.controls['nombreHab'].value,
+      this.formularioHabilidad.controls['porcentajeHab'].value,
+      this.estadoIdHab
+    );
+  
+    this.habService.updateHabilidad(hab).subscribe({
+      next: (response: habilidad) => {
+        console.log(response);
+        this.getHabilidad();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+  }
+
+  confirmaElimina(){
+    this.habService.deleteHabilidad(this.estadoIdHab).subscribe({
+      next: (response: void) => {
+        console.log(response);
+        this.getHabilidad();
+      },
+      error:(error: HttpErrorResponse)=>{
+        alert(error.message);
+      }
+    })
+  }
 }
