@@ -1,7 +1,12 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { Router } from '@angular/router';
-import { AutenticacionService } from 'src/app/service/autenticacion.service';
+import { finalize } from 'rxjs';
+import { Login } from 'src/app/model/login';
+import { TokenDTO } from 'src/app/model/tokenDTO';
+import { AuthService } from 'src/app/service/auth.service';
+import { TokenService } from 'src/app/service/token.service';
 
 @Component({
   selector: 'app-login',
@@ -10,36 +15,72 @@ import { AutenticacionService } from 'src/app/service/autenticacion.service';
 })
 export class LoginComponent implements OnInit {
 
+  isLogged = false;
+  isLogginFail = false;
+  loginUsuario!: Login;
+  nombreUsuario!: string;
+  password!: string;
+  roles: string[]=[];
+
   formLogin :FormGroup; 
 
-  constructor(private formBuilder :FormBuilder, private autService:AutenticacionService, private ruta :Router) {
+  constructor(private tokenService:TokenService, private authService: AuthService, private formBuilder :FormBuilder, private ruta :Router) {
+    
     this.formLogin = this.formBuilder.group({
-      email:['',[Validators.required,Validators.email]],
-      password:['',[Validators.required,Validators.minLength(8)]],
-      deviceInfo:this.formBuilder.group({
-        deviceId: ["12312314143"],
-        deviceType: ["DEVICE_TYPE_ANDROID"],
-        notificationToken: ["878878adffafa"]
-      })
+      usernameOrEmail:['',[Validators.required,Validators.minLength(5)]],
+      password:['',[Validators.required,Validators.minLength(5)]]
     })
+
    }
 
   ngOnInit(): void {
   }
 
+  onLogin():void{
+    this.isLogged = false;
+    this.isLogginFail = false;
+    
+    this.loginUsuario = new Login(
+      this.formLogin.controls['usernameOrEmail'].value,
+      this.formLogin.controls['password'].value);
+
+    this.authService.login(this.loginUsuario).pipe(finalize(()=>this.redirecciona())).subscribe({
+      next:(response: TokenDTO) => {
+        this.isLogged = true;
+        this.isLogginFail = false;
+        this.tokenService.setToken(response.token);
+        this.tokenService.setUserName(response.nombreUsuario);
+        this.tokenService.setAuthorities(response.authorities);
+        this.roles = response.authorities;
+      },
+      error:(error: HttpErrorResponse)=>{
+        this.isLogged = false;
+        this.isLogginFail = true;
+        alert("Nombre de usuario o Contraseña incorecta.");
+      }
+    })
+
+  }
+  
   get Email(){
-    return this.formLogin.get('email');
+    return this.formLogin.get('usernameOrEmail');
   }
 
   get Password(){
     return this.formLogin.get('password');
   }
 
-  onEnviar(event :Event){
-    event.preventDefault;
-    this.autService.IniciarSesion(this.formLogin.value).subscribe(data=>{
-      console.log("DATA:" + JSON.stringify(data));
-      this.ruta.navigate(['/portfolio']);     
-    });
+  redirecciona(){
+    if(this.tokenService.getToken()){
+      this.ruta.navigate(['/portfolio']);
+    }
+  }
+
+  cancelar(){
+    this.ruta.navigate(['/portfolio']);
+  }
+
+  registro(){
+    this.ruta.navigate(['/registro']);
   }
 }

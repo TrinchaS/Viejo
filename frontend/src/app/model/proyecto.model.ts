@@ -1,13 +1,13 @@
 export class proyecto{
-    idPro?: number;
-    nombrePro :String;
-    urlPro : String;
-    descripcionPro :String;
+    id?: number;
+    nombre :string;
+    url : string;
+    descripcion :string;
 
-    constructor(nombre :String, url :String, descripcion :String, id? :number){
-        this.nombrePro = nombre;
-        this.urlPro = url;
-        this.descripcionPro = descripcion;
-        this.idPro = id;
+    constructor(nombre :string, url :string, descripcion :string, id? :number){
+        this.nombre = nombre;
+        this.url = url;
+        this.descripcion = descripcion;
+        this.id = id;
     }
 }

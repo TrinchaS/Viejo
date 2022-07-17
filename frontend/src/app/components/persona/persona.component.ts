@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { persona } from 'src/app/model/persona.model';
 import { PersonaService } from 'src/app/service/persona.service';
+import { TokenService } from 'src/app/service/token.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-persona',
@@ -10,34 +12,41 @@ import { PersonaService } from 'src/app/service/persona.service';
   styleUrls: ['./persona.component.css']
 })
 export class PersonaComponent implements OnInit {
-  yo = "1";
+  
+  visibilidad :string = "display:none;";
 
   datos :persona = new persona("","","","","","","","","","","");
 
   formularioPerfil :FormGroup;
 
-  constructor(public perService :PersonaService, private _builder :FormBuilder) {
+  constructor(public perService :PersonaService, private _builder :FormBuilder, private token :TokenService) {
     this.formularioPerfil = this._builder.group({
-      nombrePer:[''],
-      apellidoPer: [''],
-      tituloNivelPer :[''],
-      fnacimientoPer: [''],
-      recidePer :[''],
-      emailPer: [''],
-      whatsappPer: [''],
-      facebookPer: [''],
-      fotoURLPer: [''],
-      logoURLPer: [''],
-      acercaPer: ['']
+      nombre:[''],
+      apellido: [''],
+      tituloNivel :[''],
+      fnacimiento: [''],
+      recide :[''],
+      email: [''],
+      whatsapp: [''],
+      facebook: [''],
+      fotoURL: [''],
+      logoURL: [''],
+      acerca: ['']
     });
   }
 
   ngOnInit(): void {
     this.getPersona();
+
+    if(this.token.getAuthorities().toString() == "ROLE_ADMIN"){
+      this.visibilidad = "display:block;";
+    }else{
+      this.visibilidad = "display:none;";
+    }
   }
 
   getPersona(){
-    this.perService.getPersona(this.yo).subscribe({
+    this.perService.getPersona(environment.idPersona).subscribe({
       next: (response: persona) => {
         this.datos = response;
       },
@@ -48,17 +57,17 @@ export class PersonaComponent implements OnInit {
   }
 
   completaFormulario(){
-    this.formularioPerfil.controls['nombrePer'].setValue(this.datos.nombrePer);
-    this.formularioPerfil.controls['apellidoPer'].setValue(this.datos.apellidoPer);
-    this.formularioPerfil.controls['tituloNivelPer'].setValue(this.datos.tituloNivelPer);
-    this.formularioPerfil.controls['fnacimientoPer'].setValue(this.datos.fnacimientoPer);
-    this.formularioPerfil.controls['recidePer'].setValue(this.datos.recidePer);
-    this.formularioPerfil.controls['emailPer'].setValue(this.datos.emailPer);
-    this.formularioPerfil.controls['whatsappPer'].setValue(this.datos.whatsappPer);
-    this.formularioPerfil.controls['facebookPer'].setValue(this.datos.facebookPer);
-    this.formularioPerfil.controls['fotoURLPer'].setValue(this.datos.fotoURLPer);
-    this.formularioPerfil.controls['logoURLPer'].setValue(this.datos.logoURLPer);
-    this.formularioPerfil.controls['acercaPer'].setValue(this.datos.acercaPer)
+    this.formularioPerfil.controls['nombre'].setValue(this.datos.nombre);
+    this.formularioPerfil.controls['apellido'].setValue(this.datos.apellido);
+    this.formularioPerfil.controls['tituloNivel'].setValue(this.datos.tituloNivel);
+    this.formularioPerfil.controls['fnacimiento'].setValue(this.datos.fnacimiento);
+    this.formularioPerfil.controls['recide'].setValue(this.datos.recide);
+    this.formularioPerfil.controls['email'].setValue(this.datos.email);
+    this.formularioPerfil.controls['whatsapp'].setValue(this.datos.whatsapp);
+    this.formularioPerfil.controls['facebook'].setValue(this.datos.facebook);
+    this.formularioPerfil.controls['fotoURL'].setValue(this.datos.fotoURL);
+    this.formularioPerfil.controls['logoURL'].setValue(this.datos.logoURL);
+    this.formularioPerfil.controls['acerca'].setValue(this.datos.acerca)
   }
 
   muestraOculta(valorId:string):void{
@@ -77,23 +86,22 @@ export class PersonaComponent implements OnInit {
 
   confirma(valorId:string){
     let nuevo : persona = new persona (
-      this.formularioPerfil.controls['nombrePer'].value,
-      this.formularioPerfil.controls['apellidoPer'].value,
-      this.formularioPerfil.controls['tituloNivelPer'].value,
-      this.formularioPerfil.controls['fnacimientoPer'].value,
-      this.formularioPerfil.controls['recidePer'].value,
-      this.formularioPerfil.controls['emailPer'].value,
-      this.formularioPerfil.controls['whatsappPer'].value,
-      this.formularioPerfil.controls['facebookPer'].value,
-      this.formularioPerfil.controls['fotoURLPer'].value,
-      this.formularioPerfil.controls['logoURLPer'].value,
-      this.formularioPerfil.controls['acercaPer'].value,
-      this.datos.idPer
+      this.formularioPerfil.controls['nombre'].value,
+      this.formularioPerfil.controls['apellido'].value,
+      this.formularioPerfil.controls['tituloNivel'].value,
+      this.formularioPerfil.controls['fnacimiento'].value,
+      this.formularioPerfil.controls['recide'].value,
+      this.formularioPerfil.controls['email'].value,
+      this.formularioPerfil.controls['whatsapp'].value,
+      this.formularioPerfil.controls['facebook'].value,
+      this.formularioPerfil.controls['fotoURL'].value,
+      this.formularioPerfil.controls['logoURL'].value,
+      this.formularioPerfil.controls['acerca'].value,
+      this.datos.id
     )
 
-    this.perService.updatePersona(nuevo).subscribe({
+    this.perService.updatePersona(environment.idPersona, nuevo).subscribe({
       next: (response: persona) => {
-        console.log(response);
         this.getPersona();
       },
       error:(error: HttpErrorResponse)=>{

@@ -1,8 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { proyecto } from 'src/app/model/proyecto.model';
 import { ProyectoService } from 'src/app/service/proyecto.service';
+import { TokenService } from 'src/app/service/token.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-proyectos',
@@ -11,6 +14,10 @@ import { ProyectoService } from 'src/app/service/proyecto.service';
 })
 export class ProyectosComponent implements OnInit{
 
+  visibilidad :string = "display:none;";
+  ocutalParaEliminar :string = "display:block;";
+  muestraParaEliminar :string = "display:none;";
+  
   datos :proyecto[] = [];
 
   formularioProyecto :FormGroup;
@@ -20,20 +27,26 @@ export class ProyectosComponent implements OnInit{
   //contiene el ultimo 'id' 
   private estadoIdPro = 0;
 
-  constructor(public proService: ProyectoService, public builder :FormBuilder) {
+  constructor(public proService: ProyectoService, public builder :FormBuilder, private token :TokenService) {
     this.formularioProyecto = this.builder.group({
-      nombrePro : [''],
-      urlPro : [''],
-      descripcionPro : ['']
+      nombre : [''],
+      url : [''],
+      descripcion : ['']
     })
   }
 
   ngOnInit(): void {
     this.getProyecto();
+
+    if(this.token.getAuthorities().toString() == "ROLE_ADMIN"){
+      this.visibilidad = "display:block;";
+    }else{
+      this.visibilidad = "display:none;";
+    }
   }
 
   getProyecto(){
-    this.proService.allProyecto().subscribe({
+    this.proService.allProyecto(environment.idPersona).subscribe({
       next:(response: proyecto[])=>{
         this.datos=response;
       },
@@ -46,17 +59,14 @@ export class ProyectosComponent implements OnInit{
   ejecuta(){
     switch(this.estadoPro){
       case 1:
-        console.log("Agregado");
         this.confirmaAgrega();
         this.estadoIdPro = 0;
         break;
       case 2:
-        console.log("Editado");
         this.confirmaEdita();
         this.estadoIdPro = 0;
         break;
       case 3:
-        console.log("Eliminado");
         this.confirmaElimina();
         this.estadoIdPro;
         break;
@@ -69,6 +79,10 @@ export class ProyectosComponent implements OnInit{
   }
 
   agregaProyecto(){
+    this.ocutalParaEliminar = "display:block;";
+    this.muestraParaEliminar = "display:none;";
+    let elemento = document.getElementById("tituloFormPro");
+    elemento!.innerText="Agrega nuevo Proyecto";
     if(this.estadoPro == 1){
       this.oculta("formProyecto");
       this.estadoPro = 0;
@@ -82,6 +96,10 @@ export class ProyectosComponent implements OnInit{
   };
 
   editaProyecto(id : number = 0){
+    this.ocutalParaEliminar = "display:block;";
+    this.muestraParaEliminar = "display:none;";
+    let elemento = document.getElementById("tituloFormPro");
+    elemento!.innerText="Editar campos";
     if(this.estadoPro == 2 && this.estadoIdPro == id){
       this.oculta("formProyecto");
       this.estadoPro = 0;
@@ -95,6 +113,20 @@ export class ProyectosComponent implements OnInit{
   }
 
   borraProyecto(id :number = 0){
+    this.ocutalParaEliminar = "display:none;";
+    this.muestraParaEliminar = "display:block;";
+    let tituloForm = document.getElementById("tituloFormPro");
+    tituloForm!.innerText="Eliminar";
+    let muestraElimina = document.getElementById("muestraEliminaPro");
+    this.proService.getProyecto(environment.idPersona,id.toString()).subscribe({
+      next: (response: proyecto) => {
+        muestraElimina!.innerText=response.nombre;
+      },
+      error:()=>{
+        muestraElimina!.innerText="Sin nombre";
+      }
+    });
+    
     if(this.estadoPro == 3 && this.estadoIdPro == id){
       this.oculta("formProyecto");
       this.estadoPro = 0;
@@ -131,28 +163,28 @@ export class ProyectosComponent implements OnInit{
   private rellena(id :number){
     let x=0;
     for(let d=0;d<this.datos.length;d++){
-      if (this.datos[d].idPro == id){x=d}
+      if (this.datos[d].id == id){x=d}
     }
-    this.formularioProyecto.controls['nombrePro'].setValue(this.datos[x].nombrePro);
-    this.formularioProyecto.controls['urlPro'].setValue(this.datos[x].urlPro);
-    this.formularioProyecto.controls['descripcionPro'].setValue(this.datos[x].descripcionPro);
+    this.formularioProyecto.controls['nombre'].setValue(this.datos[x].nombre);
+    this.formularioProyecto.controls['url'].setValue(this.datos[x].url);
+    this.formularioProyecto.controls['descripcion'].setValue(this.datos[x].descripcion);
   }
 
   private limpia(){
-    this.formularioProyecto.controls['nombrePro'].setValue('');
-    this.formularioProyecto.controls['urlPro'].setValue('');
-    this.formularioProyecto.controls['descripcionPro'].setValue('');
+    this.formularioProyecto.controls['nombre'].setValue('');
+    this.formularioProyecto.controls['url'].setValue('');
+    this.formularioProyecto.controls['descripcion'].setValue('');
   }
 
   confirmaAgrega(){
     let pro :proyecto = new proyecto(
-      this.formularioProyecto.controls['nombrePro'].value,
-      this.formularioProyecto.controls['urlPro'].value,
-      this.formularioProyecto.controls['descripcionPro'].value
+      this.formularioProyecto.controls['nombre'].value,
+      this.formularioProyecto.controls['url'].value,
+      this.formularioProyecto.controls['descripcion'].value
     );
-    this.proService.addProyecto(pro).subscribe({
+    this.proService.addProyecto(environment.idPersona, pro).subscribe({
       next: (response: proyecto) => {
-        console.log(response);
+        //console.log(response);
         this.getProyecto();
       },
       error:(error: HttpErrorResponse)=>{
@@ -163,14 +195,14 @@ export class ProyectosComponent implements OnInit{
 
   confirmaEdita(){
     let pro :proyecto = new proyecto(
-      this.formularioProyecto.controls['nombrePro'].value,
-      this.formularioProyecto.controls['urlPro'].value,
-      this.formularioProyecto.controls['descripcionPro'].value,
+      this.formularioProyecto.controls['nombre'].value,
+      this.formularioProyecto.controls['url'].value,
+      this.formularioProyecto.controls['descripcion'].value,
       this.estadoIdPro
     );
-    this.proService.updateProyecto(pro).subscribe({
+    this.proService.updateProyecto(environment.idPersona, this.estadoIdPro.toString(), pro).subscribe({
       next: (response: proyecto) => {
-        console.log(response);
+        //console.log(response);
         this.getProyecto();
       },
       error:(error: HttpErrorResponse)=>{
@@ -180,10 +212,10 @@ export class ProyectosComponent implements OnInit{
   }
 
   confirmaElimina(){
-    this.proService.deleteProyecto(this.estadoIdPro).subscribe({
+    this.proService.deleteProyecto(environment.idPersona, this.estadoIdPro.toString())
+    .pipe(finalize(()=>this.getProyecto())).subscribe({
       next: (response: void) => {
-        console.log(response);
-        this.getProyecto();
+        //console.log(response);
       },
       error:(error: HttpErrorResponse)=>{
         alert(error.message);

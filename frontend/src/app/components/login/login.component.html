@@ -1,16 +1,15 @@
-<h1 class="m-5">Inicio de Sesión</h1>
-<form [formGroup]="formLogin" class="m-5" (ngSubmit)="onEnviar($event)" >
+<h1 class="m-5 card2">Inicio de Sesión</h1>
+<form [formGroup]="formLogin" class="m-5" (ngSubmit)="onLogin()" >
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Email</label>      
-      <input type="email" formControlName="email" 
-      [ngClass]="{'is-invalid': Email?.errors && Email?.touched, 'is-valid': !Email?.errors && Email?.touched}"
-      class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+      <label for="exampleInputEmail1" class="form-label">Email o Nombre de usuario</label>      
+      <input type="text" formControlName="usernameOrEmail" class="form-control" id="usernameOrEmail" aria-describedby="emailHelp"
+      [ngClass]="{'is-invalid': Email?.errors && Email?.touched, 'is-valid': !Email?.errors && Email?.touched}">
       <div *ngIf="Email?.errors && Email?.touched">
         <p *ngIf="Email?.hasError('required')" class="text-danger">
-          El email es requerido.
+          El email o nombre de usuario es requerido.
         </p>
-        <p *ngIf="Email?.hasError('email')" class="text-danger">
-          El formato del email debe ser valido.
+        <p *ngIf="Email?.getError?.length" class="text-danger">
+          Debe tener 5 o mas caracteres.
         </p>
       </div>
     </div>
@@ -18,15 +17,22 @@
       <label for="exampleInputPassword1" class="form-label">Contraseña</label>      
       <input type="password" formControlName="password" 
       [ngClass]="{'is-invalid': Password?.errors && Password?.touched, 'is-valid': !Password?.errors && Password?.touched}"
-      class="form-control" id="exampleInputPassword1">
+      class="form-control" id="password">
       <div *ngIf="Password?.errors && Password?.touched">
         <p *ngIf="Password?.hasError('required')" class="text-danger">
           El password es requerido.
         </p>
         <p *ngIf="Password?.getError?.length" class="text-danger">
-          La contraseña debe ser de 8 o mas caracteres.
+          La contraseña debe ser de 5 o mas caracteres.
         </p>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Enviar</button>
+    <div class="linea">
+      <div>
+        <button type="submit" class="btn btn-primary" >Enviar</button>
+        <button type="button" class="btn btn-danger" (click)="cancelar()">Cancelar</button>
+      </div>
+      <button type="button" (click)="registro()" class="btn btn-success">Registrar</button>
+    </div>
+    
 </form>

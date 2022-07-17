@@ -13,23 +13,23 @@ export class EducacionService {
 
   constructor(private http :HttpClient) {}
 
-  public getEducacion(id :string) :Observable<educacion>{
-    return this.http.get<educacion>(`${this.apiServerURL}/educacion/buscaEducacion/${id}`);
+  public getEducacion(personaID :string, educacionID :string) :Observable<educacion>{
+    return this.http.get<educacion>(`${this.apiServerURL}/educacion/buscarEducacion/${personaID}/${educacionID}`);
   }
 
-  public allEducacion():Observable<educacion[]>{
-    return this.http.get<educacion[]>(`${this.apiServerURL}/educacion/verEducaciones`);
+  public allEducacion(idPersona: string):Observable<educacion[]>{
+    return this.http.get<educacion[]>(`${this.apiServerURL}/educacion/verEducaciones/${idPersona}`);
   }
 
-  public addEducacion(edu :educacion):Observable<educacion>{
-    return this.http.post<educacion>(`${this.apiServerURL}/educacion/creaEducacion/`,edu);
+  public addEducacion(idPersona: string, edu :educacion):Observable<educacion>{
+    return this.http.post<educacion>(`${this.apiServerURL}/educacion/crearEducacion/${idPersona}`,edu);
   }
 
-  public updateEducacion(edu :educacion):Observable<educacion>{
-    return this.http.put<educacion>(`${this.apiServerURL}/educacion/editaEducacion/`,edu);
+  public updateEducacion(personaID :string, educacionID :string, edu :educacion):Observable<educacion>{
+    return this.http.put<educacion>(`${this.apiServerURL}/educacion/editarEducacion/${personaID}/${educacionID}`,edu);
   }
 
-  public deleteEducacion(id :number):Observable<void>{
-    return this.http.delete<void>(`${this.apiServerURL}/educacion/borrarEducacion/${id}`);
+  public deleteEducacion(personaID :string, educacionID :string):Observable<void>{
+    return this.http.delete<void>(`${this.apiServerURL}/educacion/borrarEducacion/${personaID}/${educacionID}`);
   }
 }

@@ -2,34 +2,35 @@
     <div id="NombreDelInstituto">
         <div class="linea">
             <h2>Educación</h2>
-            <button type="button" class="btn" (click)="agregaEducacion()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button>
+            <button type="button" [style]="visibilidad" class="btn" (click)="agregaEducacion()"><i class="bi bi-plus-square" style="color: black;font-size: 2em;"></i></button>
         </div>
         <ul>
             <li type="none" class="marco" *ngFor="let item of datos">
                 <div class="linea">
-                    <h3>{{item.institutoEdu}}</h3>
-                    <div>
-                        <button type="button" class="btn" (click)="editaEducacion(item.idEdu)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>        
-                        <button type="button" class="btn" (click)="borraEducacion(item.idEdu)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
+                    <h3>{{item.instituto}}</h3>
+                    <div class="linea" style="width: max-content;">
+                        <button type="button" [style]="visibilidad" class="btn" (click)="editaEducacion(item.id)"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>        
+                        <button type="button" [style]="visibilidad" class="btn" (click)="borraEducacion(item.id)"><i class="bi bi-trash" style="color: black;font-size: 2em;"></i></button>
                     </div>
                 </div>
-                <h5>{{item.tituloEdu}}</h5>
-                {{item.fingresoEdu}} al {{item.fegresoEdu}}
+                <h5>{{item.titulo}}</h5>
+                {{item.fingreso}} al {{item.fegreso}}
             </li>
         </ul>
     </div>
     
     <!-- formulario Educacion -->
     <form [formGroup]="formularioEducacion" (ngSubmit)="ejecuta()" id="formEducacion" class="marco" style="display:none;margin: -5px 2% 2%">
-        <h3>Ingreso datos de Educacion</h3>
-        <label>Nombre del Instituto</label>
-        <input type="text" formControlName="institutoEdu">
-        <label>Titulo</label>
-        <input type="text" formControlName="tituloEdu">
-        <label>Fecha de Ingreso</label>
-        <input type="text" formControlName="fingresoEdu">
-        <label>Fecha de Egreso</label>
-        <input type="text" formControlName="fegresoEdu">
+        <h3 id="tituloFormEdu">Ingreso datos de Educacion</h3>
+        <label [style]="ocutalParaEliminar">Nombre del Instituto</label>
+        <input [style]="ocutalParaEliminar"type="text" formControlName="instituto">
+        <label [style]="ocutalParaEliminar">Titulo</label>
+        <input [style]="ocutalParaEliminar" type="text" formControlName="titulo">
+        <label [style]="ocutalParaEliminar" >Fecha de Ingreso</label>
+        <input [style]="ocutalParaEliminar" type="text" formControlName="fingreso">
+        <label [style]="ocutalParaEliminar" >Fecha de Egreso</label>
+        <input [style]="ocutalParaEliminar" type="text" formControlName="fegreso">
+        <label [style]="muestraParaEliminar" id="muestraEliminaEdu"></label>
         <button type="submit" id="botonEdu" class="btn btn-primary" style="margin-top: 1%;">Boton</button>
     </form>
 </div>

@@ -12,23 +12,24 @@ export class ProyectoService {
 
   constructor(private http :HttpClient) {}
 
-  public getProyecto(id :string) :Observable<proyecto>{
-    return this.http.get<proyecto>(`${this.apiServerURL}/proyecto/buscaProyecto/${id}`);
+  
+  public getProyecto(personaID :string, proyectoID :string) :Observable<proyecto>{
+    return this.http.get<proyecto>(`${this.apiServerURL}/proyecto/buscarProyecto/${personaID}/${proyectoID}`);
+  }
+  
+  public allProyecto(idPersona :string):Observable<proyecto[]>{
+    return this.http.get<proyecto[]>(`${this.apiServerURL}/proyecto/verProyectos/${idPersona}`);
   }
 
-  public allProyecto():Observable<proyecto[]>{
-    return this.http.get<proyecto[]>(`${this.apiServerURL}/proyecto/verProyectos`);
+  public addProyecto(personaID :string, pro :proyecto):Observable<proyecto>{
+    return this.http.post<proyecto>(`${this.apiServerURL}/proyecto/crearProyecto/${personaID}`,pro);
   }
 
-  public addProyecto(pro :proyecto):Observable<proyecto>{
-    return this.http.post<proyecto>(`${this.apiServerURL}/proyecto/creaProyecto/`,pro);
+  public updateProyecto(personaID :string, proyectoID :string, pro :proyecto):Observable<proyecto>{
+    return this.http.put<proyecto>(`${this.apiServerURL}/proyecto/editarProyecto/${personaID}/${proyectoID}`,pro);
   }
 
-  public updateProyecto(pro :proyecto):Observable<proyecto>{
-    return this.http.put<proyecto>(`${this.apiServerURL}/proyecto/editaProyecto/`,pro);
-  }
-
-  public deleteProyecto(id :number):Observable<void>{
-    return this.http.delete<void>(`${this.apiServerURL}/proyecto/borrarProyecto/${id}`);
+  public deleteProyecto(personaID :string, proyectoID :string):Observable<void>{
+    return this.http.delete<void>(`${this.apiServerURL}/proyecto/borrarProyecto/${personaID}/${proyectoID}`);
   }
 }

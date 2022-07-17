@@ -1,8 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { educacion } from 'src/app/model/educacion.model';
 import { EducacionService } from 'src/app/service/educacion.service';
+import { TokenService } from 'src/app/service/token.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-educacion',
@@ -10,6 +13,10 @@ import { EducacionService } from 'src/app/service/educacion.service';
   styleUrls: ['./educacion.component.css']
 })
 export class EducacionComponent implements OnInit {
+
+  visibilidad :string = "display:none;";
+  ocutalParaEliminar :string = "display:block;";
+  muestraParaEliminar :string = "display:none;";
 
   public datos :educacion [] = [];
 
@@ -23,21 +30,27 @@ export class EducacionComponent implements OnInit {
   //contiene el ultimo 'id' 
   private estadoIdEdu = 0;
 
-  constructor(public eduService :EducacionService, public builder :FormBuilder) {
+  constructor(public eduService :EducacionService, public builder :FormBuilder, private token :TokenService) {
     this.formularioEducacion = this.builder.group({
-      institutoEdu :[''],
-      tituloEdu :[''],
-      fingresoEdu :[''],
-      fegresoEdu :['']
+      instituto :[''],
+      titulo :[''],
+      fingreso :[''],
+      fegreso :['']
     });
   }
 
   ngOnInit(): void {
     this.getEducacion();
+
+    if(this.token.getAuthorities().toString() == "ROLE_ADMIN"){
+      this.visibilidad = "display:block;";
+    }else{
+      this.visibilidad = "display:none;";
+    }
   }
 
   public getEducacion(){
-    this.eduService.allEducacion().subscribe({
+    this.eduService.allEducacion(environment.idPersona).subscribe({
       next:(Response: educacion[])=>{
         this.datos=Response;
       },
@@ -50,17 +63,14 @@ export class EducacionComponent implements OnInit {
   ejecuta(){
     switch(this.estadoEdu){
       case 1:
-        console.log("Agregando");
         this.confirmaAgrega();
         this.estadoIdEdu=0;
         break;
       case 2:
-        console.log("Editando");
         this.confirmaEdita();
         this.estadoIdEdu=0;
         break;
       case 3:
-        console.log("Eliminando");
         this.confirmaElimina();
         this.estadoEdu = 0;
         break;
@@ -73,6 +83,10 @@ export class EducacionComponent implements OnInit {
   }
 
   agregaEducacion(){
+    this.ocutalParaEliminar = "display:block;";
+    this.muestraParaEliminar = "display:none;";
+    let elemento = document.getElementById("tituloFormEdu");
+    elemento!.innerText="Agrega nueva Educacion";
     if(this.estadoEdu == 1){
       this.oculta("formEducacion");
       this.estadoEdu = 0;
@@ -86,6 +100,10 @@ export class EducacionComponent implements OnInit {
   };
 
   editaEducacion(id : number = 0){
+    this.ocutalParaEliminar = "display:block;";
+    this.muestraParaEliminar = "display:none;";
+    let elemento = document.getElementById("tituloFormEdu");
+    elemento!.innerText="Editar campos";
     if(this.estadoEdu == 2 && this.estadoIdEdu == id){
       this.oculta("formEducacion");
       this.estadoEdu = 0;
@@ -99,6 +117,19 @@ export class EducacionComponent implements OnInit {
   }
 
   borraEducacion(id :any){
+    this.ocutalParaEliminar = "display:none;";
+    this.muestraParaEliminar = "display:block;";
+    let tituloForm = document.getElementById("tituloFormEdu");
+    tituloForm!.innerText="Eliminar";
+    let muestraElimina = document.getElementById("muestraEliminaEdu");
+    this.eduService.getEducacion(environment.idPersona,id.toString()).subscribe({
+      next: (response: educacion) => {
+        muestraElimina!.innerText=response.titulo;
+      },
+      error:()=>{
+        muestraElimina!.innerText="Sin nombre";
+      }
+    });
     if(this.estadoEdu == 3 && this.estadoIdEdu == id){
       this.oculta("formEducacion");
       this.estadoEdu = 0;
@@ -135,26 +166,26 @@ export class EducacionComponent implements OnInit {
   private rellena(id :number){
     let x=0;
     for(let d=0;d<this.datos.length;d++){
-      if (this.datos[d].idEdu == id){x=d}
+      if (this.datos[d].id == id){x=d}
     }
-    this.formularioEducacion.controls['institutoEdu'].setValue(this.datos[x].institutoEdu);
-    this.formularioEducacion.controls['tituloEdu'].setValue(this.datos[x].tituloEdu);
-    this.formularioEducacion.controls['fingresoEdu'].setValue(this.datos[x].fingresoEdu);
-    this.formularioEducacion.controls['fegresoEdu'].setValue(this.datos[x].fegresoEdu);
+    this.formularioEducacion.controls['instituto'].setValue(this.datos[x].instituto);
+    this.formularioEducacion.controls['titulo'].setValue(this.datos[x].titulo);
+    this.formularioEducacion.controls['fingreso'].setValue(this.datos[x].fingreso);
+    this.formularioEducacion.controls['fegreso'].setValue(this.datos[x].fegreso);
   }
 
   private limpia(){
-    this.formularioEducacion.controls['institutoEdu'].setValue('');
-    this.formularioEducacion.controls['tituloEdu'].setValue('');
-    this.formularioEducacion.controls['fingresoEdu'].setValue('');
-    this.formularioEducacion.controls['fegresoEdu'].setValue('');
+    this.formularioEducacion.controls['instituto'].setValue('');
+    this.formularioEducacion.controls['titulo'].setValue('');
+    this.formularioEducacion.controls['fingreso'].setValue('');
+    this.formularioEducacion.controls['fegreso'].setValue('');
   }
 
   confirmaElimina(){
-    this.eduService.deleteEducacion(this.estadoIdEdu).subscribe({
+    this.eduService.deleteEducacion(environment.idPersona,this.estadoIdEdu.toString())
+    .pipe(finalize(()=>this.getEducacion())).subscribe({
       next: (response: void) => {
-        console.log(response);
-        this.getEducacion();
+        //console.log(response);
       },
       error:(error: HttpErrorResponse)=>{
         alert(error.message);
@@ -164,15 +195,15 @@ export class EducacionComponent implements OnInit {
 
   confirmaEdita(){
     let edu :educacion = new educacion(
-      this.formularioEducacion.controls['institutoEdu'].value ,
-      this.formularioEducacion.controls['tituloEdu'].value,
-      this.formularioEducacion.controls['fingresoEdu'].value,
-      this.formularioEducacion.controls['fegresoEdu'].value,
+      this.formularioEducacion.controls['instituto'].value ,
+      this.formularioEducacion.controls['titulo'].value,
+      this.formularioEducacion.controls['fingreso'].value,
+      this.formularioEducacion.controls['fegreso'].value,
       this.estadoIdEdu);
 
-    this.eduService.updateEducacion(edu).subscribe({
+    this.eduService.updateEducacion(environment.idPersona,this.estadoIdEdu.toString(), edu).subscribe({
       next: (response: educacion) => {
-        console.log(response);
+        //console.log(response);
         this.getEducacion();
       },
       error:(error: HttpErrorResponse)=>{
@@ -183,15 +214,15 @@ export class EducacionComponent implements OnInit {
 
   confirmaAgrega(){
     let edu :educacion = new educacion(
-      this.formularioEducacion.controls['institutoEdu'].value ,
-      this.formularioEducacion.controls['tituloEdu'].value,
-      this.formularioEducacion.controls['fingresoEdu'].value,
-      this.formularioEducacion.controls['fegresoEdu'].value,
+      this.formularioEducacion.controls['instituto'].value ,
+      this.formularioEducacion.controls['titulo'].value,
+      this.formularioEducacion.controls['fingreso'].value,
+      this.formularioEducacion.controls['fegreso'].value,
     );
 
-    this.eduService.addEducacion(edu).subscribe({
+    this.eduService.addEducacion(environment.idPersona,edu).subscribe({
       next: (response: educacion) => {
-        console.log(response);
+        //console.log(response);
         this.getEducacion();
       },
       error:(error: HttpErrorResponse)=>{

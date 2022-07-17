@@ -1,8 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { habilidad } from 'src/app/model/habilidad.model';
 import { HabilidadService } from 'src/app/service/habilidad.service';
+import { TokenService } from 'src/app/service/token.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-habilidades',
@@ -10,7 +13,10 @@ import { HabilidadService } from 'src/app/service/habilidad.service';
   styleUrls: ['./habilidades.component.css']
 })
 export class HabilidadesComponent implements OnInit {
-  aux :string[] = [];
+  
+  visibilidad :string = "display:none;";
+  ocutalParaEliminar :string = "display:block;";
+  muestraParaEliminar :string = "display:none;";
 
   datos :habilidad[] = [];
 
@@ -21,19 +27,25 @@ export class HabilidadesComponent implements OnInit {
   //contiene el ultimo 'id' 
   private estadoIdHab = 0;
 
-  constructor(public habService: HabilidadService, public builder :FormBuilder) {
+  constructor(public habService: HabilidadService, public builder :FormBuilder, private token :TokenService) {
     this.formularioHabilidad = this.builder.group({
-      nombreHab : [''],
-      porcentajeHab : ['']
+      nombre : [''],
+      porcentaje : ['']
     })
    }
 
   ngOnInit(): void {
    this.getHabilidad();
+
+   if(this.token.getAuthorities().toString() == "ROLE_ADMIN"){
+    this.visibilidad = "display:block;";
+  }else{
+    this.visibilidad = "display:none;";
+  }
   }
 
   getHabilidad(){
-    this.habService.allHabilidad().subscribe({
+    this.habService.allHabilidad(environment.idPersona).subscribe({
       next:(Response: habilidad[])=>{
         this.datos=Response;
       },
@@ -46,17 +58,14 @@ export class HabilidadesComponent implements OnInit {
   ejecuta(){
     switch(this.estadoHab){
       case 1:
-        console.log("Agregado");
         this.confirmaAgrega();
         this.estadoIdHab = 0;
         break;
       case 2:
-        console.log("Editado");
         this.confirmaEdita();
         this.estadoIdHab = 0;
         break;
       case 3:
-        console.log("Eliminado");
         this.confirmaElimina();
         this.estadoHab = 0;
         break;
@@ -69,6 +78,10 @@ export class HabilidadesComponent implements OnInit {
   }
 
   agregaHabilidad(){
+    this.ocutalParaEliminar = "display:block;";
+    this.muestraParaEliminar = "display:none;";
+    let elemento = document.getElementById("tituloFormHab");
+    elemento!.innerText="Agrega nueva Habilidad";
     if(this.estadoHab == 1){
       this.oculta("formHabilidad");
       this.estadoHab = 0;
@@ -82,6 +95,10 @@ export class HabilidadesComponent implements OnInit {
   };
 
   editaHabilidad(id : number = 0){
+    this.ocutalParaEliminar = "display:block;";
+    this.muestraParaEliminar = "display:none;";
+    let elemento = document.getElementById("tituloFormHab");
+    elemento!.innerText="Editar campos";
     if(this.estadoHab == 2 && this.estadoIdHab == id){
       this.oculta("formHabilidad");
       this.estadoHab = 0;
@@ -95,6 +112,19 @@ export class HabilidadesComponent implements OnInit {
   }
 
   borraHabilidad(id :number = 0){
+    this.ocutalParaEliminar = "display:none;";
+    this.muestraParaEliminar = "display:block;";
+    let tituloForm = document.getElementById("tituloFormHab");
+    tituloForm!.innerText="Eliminar";
+    let muestraElimina = document.getElementById("muestraEliminaHab");
+    this.habService.getHabilidad(environment.idPersona,id.toString()).subscribe({
+      next: (response: habilidad) => {
+        muestraElimina!.innerText=response.nombre;
+      },
+      error:()=>{
+        muestraElimina!.innerText="Sin nombre";
+      }
+    });
     if(this.estadoHab == 3 && this.estadoIdHab == id){
       this.oculta("formHabilidad");
       this.estadoHab = 0;
@@ -104,8 +134,8 @@ export class HabilidadesComponent implements OnInit {
       this.renombraBoton('Eliminar');
       this.rellena(id);
       this.muestra("formHabilidad");
-      this.formularioHabilidad.controls['nombreHab'].disable;
-      this.formularioHabilidad.controls['porcentajeHab'];
+      this.formularioHabilidad.controls['nombre'].disable;
+      this.formularioHabilidad.controls['porcentaje'];
     }
   }
 
@@ -133,25 +163,25 @@ export class HabilidadesComponent implements OnInit {
   private rellena(id :number){
     let x=0;
     for(let d=0;d<this.datos.length;d++){
-      if (this.datos[d].idHab == id){x=d}
+      if (this.datos[d].id == id){x=d}
     }
-    this.formularioHabilidad.controls['nombreHab'].setValue(this.datos[x].nombreHab);
-    this.formularioHabilidad.controls['porcentajeHab'].setValue(this.datos[x].porcentajeHab);
+    this.formularioHabilidad.controls['nombre'].setValue(this.datos[x].nombre);
+    this.formularioHabilidad.controls['porcentaje'].setValue(this.datos[x].porcentaje);
   }
 
   private limpia(){
-    this.formularioHabilidad.controls['nombreHab'].setValue('');
-    this.formularioHabilidad.controls['porcentajeHab'].setValue('');
+    this.formularioHabilidad.controls['nombre'].setValue('');
+    this.formularioHabilidad.controls['porcentaje'].setValue('');
   }
 
   confirmaAgrega(){
     let hab :habilidad = new habilidad(
-      this.formularioHabilidad.controls['nombreHab'].value,
-      this.formularioHabilidad.controls['porcentajeHab'].value
+      this.formularioHabilidad.controls['nombre'].value,
+      this.formularioHabilidad.controls['porcentaje'].value
     );
-    this.habService.addHabilidad(hab).subscribe({
+    this.habService.addHabilidad(environment.idPersona, hab).subscribe({
       next: (response: habilidad) => {
-        console.log(response);
+        //console.log(response);
         this.getHabilidad();
       },
       error:(error: HttpErrorResponse)=>{
@@ -162,14 +192,14 @@ export class HabilidadesComponent implements OnInit {
 
   confirmaEdita(){
     let hab :habilidad = new habilidad(
-      this.formularioHabilidad.controls['nombreHab'].value,
-      this.formularioHabilidad.controls['porcentajeHab'].value,
+      this.formularioHabilidad.controls['nombre'].value,
+      this.formularioHabilidad.controls['porcentaje'].value,
       this.estadoIdHab
     );
   
-    this.habService.updateHabilidad(hab).subscribe({
+    this.habService.updateHabilidad(environment.idPersona, this.estadoIdHab.toString(), hab).subscribe({
       next: (response: habilidad) => {
-        console.log(response);
+        //console.log(response);
         this.getHabilidad();
       },
       error:(error: HttpErrorResponse)=>{
@@ -179,10 +209,10 @@ export class HabilidadesComponent implements OnInit {
   }
 
   confirmaElimina(){
-    this.habService.deleteHabilidad(this.estadoIdHab).subscribe({
-      next: (response: void) => {
-        console.log(response);
-        this.getHabilidad();
+    this.habService.deleteHabilidad(environment.idPersona, this.estadoIdHab.toString())
+    .pipe(finalize(()=>this.getHabilidad())).subscribe({
+      next: (response: String) => {
+        //console.log(response);
       },
       error:(error: HttpErrorResponse)=>{
         alert(error.message);

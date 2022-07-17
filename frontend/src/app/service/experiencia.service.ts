@@ -12,24 +12,26 @@ export class ExperienciaService {
 
   constructor(private http :HttpClient) {}
 
-  public getExperiencia(id :string) :Observable<experiencia>{
-    return this.http.get<experiencia>(`${this.apiServerURL}/experiencia/buscaExperiencia/${id}`);
+  
+  public getExperiencia(personaID :string, experienciaID :string) :Observable<experiencia>{
+    return this.http.get<experiencia>(`${this.apiServerURL}/experiencia/buscarExperiencia/${personaID}/${experienciaID}`);
+  }
+  
+
+  public allExperiencia(idPersona :string):Observable<experiencia[]>{
+    return this.http.get<experiencia[]>(`${this.apiServerURL}/experiencia/verExperiencias/${idPersona}`);
   }
 
-  public allExperiencia():Observable<experiencia[]>{
-    return this.http.get<experiencia[]>(`${this.apiServerURL}/experiencia/verExperiencias`);
+  public addExperiencia(personaID :string, exp :experiencia):Observable<experiencia>{
+    return this.http.post<experiencia>(`${this.apiServerURL}/experiencia/crearExperiencia/${personaID}`,exp);
   }
 
-  public addExperiencia(exp :experiencia):Observable<experiencia>{
-    return this.http.post<experiencia>(`${this.apiServerURL}/experiencia/creaExperiencia/`,exp);
+  public updateExperiencia(personaID :string, experienciaID :string, exp :experiencia):Observable<experiencia>{
+    return this.http.put<experiencia>(`${this.apiServerURL}/experiencia/editarExperiencia/${personaID}/${experienciaID}`,exp);
   }
 
-  public updateExperiencia(exp :experiencia):Observable<experiencia>{
-    return this.http.put<experiencia>(`${this.apiServerURL}/experiencia/editaExperiencia/`,exp);
-  }
-
-  public deleteExperiencia(id :number):Observable<void>{
-    return this.http.delete<void>(`${this.apiServerURL}/experiencia/borrarExperiencia/${id}`);
+  public deleteExperiencia(personaID :string, experienciaID :string):Observable<void>{
+    return this.http.delete<void>(`${this.apiServerURL}/experiencia/borrarExperiencia/${personaID}/${experienciaID}`);
   }
 
 }

@@ -1,12 +1,12 @@
 <!-- Barra de menu-->
 <nav class="navbar navbar-dark bg-dark" style="padding:0% 2%;position: sticky; top: 0; z-index: 100">
-    <div style="font-size: 0px;">
-        <img src="" alt="Logo Argentina Programa">
+    <div>
+        <a href="mailto:{{datos.email}}"><i class="bi bi-envelope" style="color: grey;font-size: 2em"></i></a>
+        <a href="https://wa.me/{{datos.whatsapp}}" target="_blank"><i class="bi bi-whatsapp" style="color: green;font-size: 2em; margin-left: 15px"></i></a>
+        <a href="https://www.facebook.com/{{datos.facebook}}" target="_blank"><i class="bi bi-facebook" style="color: #316ef3; font-size: 2em; margin-left: 15px"></i></a>
     </div>
     <div>
-        <a href="mailto:{{datos.emailPer}}"><i class="bi bi-envelope" style="color: grey;font-size: 2em"></i></a>
-        <a href="https://wa.me/{{datos.whatsappPer}}" target="_blank"><i class="bi bi-whatsapp" style="color: green;font-size: 2em; margin-left: 15px"></i></a>
-        <a href="https://www.facebook.com/{{datos.facebookPer}}" target="_blank"><i class="bi bi-facebook" style="color: #316ef3; font-size: 2em; margin-left: 15px"></i></a>
-        <button type="button" class="btn btn-outline-success" style="margin-top: -15px;margin-left: 1em" onclick="logout()">Logout</button>  
+        <button type="button" class="btn btn-outline-success" style="margin-left: 1em" (click)="login()" *ngIf="!isLogged">INICIAR</button>
+        <button type="button" class="btn btn-outline-success" style="margin-left: 1em" (click)="logout()" *ngIf="isLogged">SALIR</button>  
     </div>
 </nav>

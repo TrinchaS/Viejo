@@ -1,8 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { finalize } from 'rxjs';
 import { experiencia } from 'src/app/model/experiencia.model';
 import { ExperienciaService } from 'src/app/service/experiencia.service';
+import { TokenService } from 'src/app/service/token.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-experiencia',
@@ -11,6 +14,10 @@ import { ExperienciaService } from 'src/app/service/experiencia.service';
 })
 
 export class ExperienciaComponent implements OnInit {
+
+  visibilidad :string = "display:none;";
+  ocutalParaEliminar :string = "display:block;";
+  muestraParaEliminar :string = "display:none;";
 
   datos :experiencia[] = [];
 
@@ -21,25 +28,31 @@ export class ExperienciaComponent implements OnInit {
   //contiene el ultimo 'id' 
   private estadoIdExp = 0;
 
-  constructor(public expService: ExperienciaService, public builder :FormBuilder) {
+  constructor(public expService: ExperienciaService, public builder :FormBuilder, private token :TokenService) {
     this.formularioExperiencia = this.builder.group({
-      puestoExp : [''],
-      empresaExp : [''],
-      jornadaExp : [''],
-      fingresoExp : [''],
-      fegresoExp : [''],
-      ubicacionExp : [''],
-      paisExp : [''],
-      descripcionExp : ['']
+      puesto : [''],
+      empresa : [''],
+      jornada : [''],
+      fingreso : [''],
+      fegreso : [''],
+      ubicacion : [''],
+      pais : [''],
+      descripcion : ['']
     })
    }
 
   ngOnInit(): void {
     this.getExperiencia();
+
+    if(this.token.getAuthorities().toString() == "ROLE_ADMIN"){
+      this.visibilidad = "display:block;";
+    }else{
+      this.visibilidad = "display:none;";
+    }
   }
 
   getExperiencia(){
-    this.expService.allExperiencia().subscribe({
+    this.expService.allExperiencia(environment.idPersona).subscribe({
       next:(response: experiencia[])=>{
         this.datos=response;
       },
@@ -52,17 +65,14 @@ export class ExperienciaComponent implements OnInit {
   ejecuta(){
     switch(this.estadoExp){
       case 1:
-        console.log("Agregado");
         this.confirmaAgrega();
         this.estadoIdExp = 0;
         break;
       case 2:
-        console.log("Editado");
         this.confirmaEdita();
         this.estadoIdExp = 0;
         break;
       case 3:
-        console.log("Eliminado");
         this.confirmaElimina();
         this.estadoIdExp = 0;
         break;
@@ -75,6 +85,10 @@ export class ExperienciaComponent implements OnInit {
   }
 
   agregaExperiencia(){
+    this.ocutalParaEliminar = "display:block;";
+    this.muestraParaEliminar = "display:none;";
+    let elemento = document.getElementById("tituloFormExp");
+    elemento!.innerText="Agrega nueva experiencia";
     if(this.estadoExp == 1){
       this.oculta("formExperiencia");
       this.estadoExp = 0;
@@ -88,6 +102,10 @@ export class ExperienciaComponent implements OnInit {
   };
 
   editaExperiencia(id : number = 0){
+    this.ocutalParaEliminar = "display:block;";
+    this.muestraParaEliminar = "display:none;";
+    let elemento = document.getElementById("tituloFormExp");
+    elemento!.innerText="Editar campos";
     if(this.estadoExp == 2 && this.estadoIdExp == id){
       this.oculta("formExperiencia");
       this.estadoExp = 0;
@@ -101,6 +119,20 @@ export class ExperienciaComponent implements OnInit {
   }
 
   borraExperiencia(id :number = 0){
+    this.ocutalParaEliminar = "display:none;";
+    this.muestraParaEliminar = "display:block;";
+    let tituloForm = document.getElementById("tituloFormExp");
+    tituloForm!.innerText="Eliminar";
+    let muestraElimina = document.getElementById("muestraEliminaExp");
+    this.expService.getExperiencia(environment.idPersona,id.toString()).subscribe({
+      next: (response: experiencia) => {
+        muestraElimina!.innerText=response.puesto;
+      },
+      error:()=>{
+        muestraElimina!.innerText="Sin nombre";
+      }
+    });
+    
     if(this.estadoExp == 3 && this.estadoIdExp == id){
       this.oculta("formExperiencia");
       this.estadoExp = 0;
@@ -137,44 +169,44 @@ export class ExperienciaComponent implements OnInit {
   private rellena(id :number){
     let x=0;
     for(let d=0;d<this.datos.length;d++){
-      if (this.datos[d].idExp == id){x=d}
+      if (this.datos[d].id == id){x=d}
     }
-    this.formularioExperiencia.controls['empresaExp'].setValue(this.datos[x].empresaExp);
-    this.formularioExperiencia.controls['puestoExp'].setValue(this.datos[x].puestoExp);
-    this.formularioExperiencia.controls['jornadaExp'].setValue(this.datos[x].jornadaExp);
-    this.formularioExperiencia.controls['fingresoExp'].setValue(this.datos[x].fingresoExp);
-    this.formularioExperiencia.controls['fegresoExp'].setValue(this.datos[x].fegresoExp);
-    this.formularioExperiencia.controls['ubicacionExp'].setValue(this.datos[x].ubicacionExp);
-    this.formularioExperiencia.controls['paisExp'].setValue(this.datos[x].paisExp);
-    this.formularioExperiencia.controls['descripcionExp'].setValue(this.datos[x].descripcionExp);
+    this.formularioExperiencia.controls['empresa'].setValue(this.datos[x].empresa);
+    this.formularioExperiencia.controls['puesto'].setValue(this.datos[x].puesto);
+    this.formularioExperiencia.controls['jornada'].setValue(this.datos[x].jornada);
+    this.formularioExperiencia.controls['fingreso'].setValue(this.datos[x].fingreso);
+    this.formularioExperiencia.controls['fegreso'].setValue(this.datos[x].fegreso);
+    this.formularioExperiencia.controls['ubicacion'].setValue(this.datos[x].ubicacion);
+    this.formularioExperiencia.controls['pais'].setValue(this.datos[x].pais);
+    this.formularioExperiencia.controls['descripcion'].setValue(this.datos[x].descripcion);
   }
 
   private limpia(){
-    this.formularioExperiencia.controls['empresaExp'].setValue('');
-    this.formularioExperiencia.controls['puestoExp'].setValue('');
-    this.formularioExperiencia.controls['jornadaExp'].setValue('');
-    this.formularioExperiencia.controls['fingresoExp'].setValue('');
-    this.formularioExperiencia.controls['fegresoExp'].setValue('');
-    this.formularioExperiencia.controls['ubicacionExp'].setValue('');
-    this.formularioExperiencia.controls['paisExp'].setValue('');
-    this.formularioExperiencia.controls['descripcionExp'].setValue('');
+    this.formularioExperiencia.controls['empresa'].setValue('');
+    this.formularioExperiencia.controls['puesto'].setValue('');
+    this.formularioExperiencia.controls['jornada'].setValue('');
+    this.formularioExperiencia.controls['fingreso'].setValue('');
+    this.formularioExperiencia.controls['fegreso'].setValue('');
+    this.formularioExperiencia.controls['ubicacion'].setValue('');
+    this.formularioExperiencia.controls['pais'].setValue('');
+    this.formularioExperiencia.controls['descripcion'].setValue('');
     
   }
 
   confirmaAgrega(){
     let exp :experiencia = new experiencia(
-      this.formularioExperiencia.controls['puestoExp'].value,
-      this.formularioExperiencia.controls['empresaExp'].value,
-      this.formularioExperiencia.controls['jornadaExp'].value,
-      this.formularioExperiencia.controls['fingresoExp'].value,
-      this.formularioExperiencia.controls['fegresoExp'].value,
-      this.formularioExperiencia.controls['ubicacionExp'].value,
-      this.formularioExperiencia.controls['paisExp'].value,
-      this.formularioExperiencia.controls['descripcionExp'].value
+      this.formularioExperiencia.controls['puesto'].value,
+      this.formularioExperiencia.controls['empresa'].value,
+      this.formularioExperiencia.controls['jornada'].value,
+      this.formularioExperiencia.controls['fingreso'].value,
+      this.formularioExperiencia.controls['fegreso'].value,
+      this.formularioExperiencia.controls['ubicacion'].value,
+      this.formularioExperiencia.controls['pais'].value,
+      this.formularioExperiencia.controls['descripcion'].value
     );
-    this.expService.addExperiencia(exp).subscribe({
+    this.expService.addExperiencia(environment.idPersona, exp).subscribe({
       next: (response: experiencia) => {
-        console.log(response);
+        //console.log(response);
         this.getExperiencia();
       },
       error:(error: HttpErrorResponse)=>{
@@ -185,19 +217,19 @@ export class ExperienciaComponent implements OnInit {
 
   confirmaEdita(){
     let exp :experiencia = new experiencia(
-      this.formularioExperiencia.controls['puestoExp'].value,
-      this.formularioExperiencia.controls['empresaExp'].value,
-      this.formularioExperiencia.controls['jornadaExp'].value,
-      this.formularioExperiencia.controls['fingresoExp'].value,
-      this.formularioExperiencia.controls['fegresoExp'].value,
-      this.formularioExperiencia.controls['ubicacionExp'].value,
-      this.formularioExperiencia.controls['paisExp'].value,
-      this.formularioExperiencia.controls['descripcionExp'].value,
+      this.formularioExperiencia.controls['puesto'].value,
+      this.formularioExperiencia.controls['empresa'].value,
+      this.formularioExperiencia.controls['jornada'].value,
+      this.formularioExperiencia.controls['fingreso'].value,
+      this.formularioExperiencia.controls['fegreso'].value,
+      this.formularioExperiencia.controls['ubicacion'].value,
+      this.formularioExperiencia.controls['pais'].value,
+      this.formularioExperiencia.controls['descripcion'].value,
       this.estadoIdExp
     );
-    this.expService.updateExperiencia(exp).subscribe({
+    this.expService.updateExperiencia(environment.idPersona,this.estadoIdExp.toString(), exp).subscribe({
       next: (response: experiencia) => {
-        console.log(response);
+        //console.log(response);
         this.getExperiencia();
       },
       error:(error: HttpErrorResponse)=>{
@@ -205,12 +237,12 @@ export class ExperienciaComponent implements OnInit {
       }
     })
   }
-
+  
   confirmaElimina(){
-    this.expService.deleteExperiencia(this.estadoIdExp).subscribe({
+    this.expService.deleteExperiencia(environment.idPersona, this.estadoIdExp.toString())
+    .pipe(finalize(()=>this.getExperiencia())).subscribe({
       next: (response: void) => {
-        console.log(response);
-        this.getExperiencia();
+        //console.log(response);
       },
       error:(error: HttpErrorResponse)=>{
         alert(error.message);

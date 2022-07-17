@@ -15,6 +15,15 @@
     opacity: 1;
 }
 
+.card2{
+    overflow: hidden;
+    border-radius: 20px;
+    border: 2px solid #000000;
+    padding: 10px;
+    margin: 2%;
+    text-align: center;
+}
+
 hr {
     margin-top: -3px;
     border-bottom: 2px solid #999; 

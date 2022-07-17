@@ -1,0 +1,91 @@
+<h1 class="m-5 card2">Registro de usuario</h1>
+<form [formGroup]="formRegister" class="m-5 " (ngSubmit)="enviar()">
+  <div >
+    <div class="mb-3">
+      <label class="form-label">Nombre</label>
+      <input type="text" class="form-control" formControlName="nombre"
+      [ngClass]="{'is-invalid': Nombre?.errors && Nombre?.touched, 'is-valid': !Nombre?.errors && Nombre?.touched}"  
+      >
+      <div *ngIf="Nombre?.errors && Nombre?.touched">
+        <p *ngIf="Nombre?.hasError('required')" class="text-danger">
+          El nombre es requerido.
+        </p>
+        <p *ngIf="Nombre?.getError?.length" class="text-danger">
+          El nombre debe ser de 5 o mas caracteres.
+        </p>
+      </div>
+    </div>
+  
+    <div class="mb-3">
+      <label class="form-label">Nombre de usuario</label>      
+      <input type="text" class="form-control" formControlName="username"
+      [ngClass]="{'is-invalid': Username?.errors && Username?.touched, 'is-valid': !Username?.errors && Username?.touched}"  
+      >
+      <div *ngIf="Username?.errors && Username?.touched">
+        <p *ngIf="Username?.hasError('required')" class="text-danger">
+          El nombre de usuario es requerido.
+        </p>
+        <p *ngIf="Username?.getError?.length" class="text-danger">
+          El nombre de usuario debe ser de 5 o mas caracteres.
+        </p>
+      </div>
+    </div>
+  
+    <div class="mb-3">
+      <label class="form-label">e-mail</label>      
+      <input type="text" class="form-control" formControlName="email"
+      [ngClass]="{'is-invalid': Email?.errors && Email?.touched, 'is-valid': !Email?.errors && Email?.touched}"  
+      >
+      <div *ngIf="Email?.errors && Email?.touched">
+        <p *ngIf="Email?.hasError('required')" class="text-danger">
+          El e-mail es requerido.
+        </p>
+        <p *ngIf="Email?.getError?.length" class="text-danger">
+          El e-mail debe ser de 5 o mas caracteres.
+        </p>
+        <p *ngIf="Email?.hasError('email')" class="text-danger">
+          El formato del email debe ser valido.
+        </p>
+      </div>
+    </div>
+  
+    <div class="mb-3">
+      <label class="form-label">Password</label>      
+      <input type="password" class="form-control" formControlName="password"
+      [ngClass]="{'is-invalid': Password?.errors && Password?.touched, 'is-valid': !Password?.errors && Password?.touched}"  
+      >
+      <div *ngIf="Password?.errors && Password?.touched">
+        <p *ngIf="Password?.hasError('required')" class="text-danger">
+          El password es requerido.
+        </p>
+        <p *ngIf="Password?.getError?.length" class="text-danger">
+          El password debe ser de 5 o mas caracteres.
+        </p>
+      </div>
+    </div>
+  
+    <div class="mb-3">
+      <label class="form-label">Repita el password</label>      
+      <input type="password" class="form-control" formControlName="password2"
+      [ngClass]="{'is-invalid': Password2?.errors && Password2?.touched, 'is-valid': !Password2?.errors && Password2?.touched}"  
+      >
+      <div *ngIf="Password2?.errors && Password2?.touched">
+        <p *ngIf="Password2?.hasError('required')" class="text-danger">
+          El password es requerido.
+        </p>
+        <p *ngIf="Password2?.getError?.length" class="text-danger">
+          El password debe ser de 5 o mas caracteres.
+        </p>
+      </div>
+    </div>
+
+  </div> 
+
+  <br>
+
+  <div class="linea">
+    <button type="submit" class="btn btn-primary">Enviar</button>
+    <button type="button" class="btn btn-danger" (click)="cancelar()">Cancelar</button>
+  </div>
+  
+</form>

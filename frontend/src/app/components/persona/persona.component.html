@@ -1,73 +1,62 @@
 <div class="card">
-    <img class="img-logo" src="{{datos.logoURLPer}}" alt="Argentina Programa #YO PROGRAMO">
+    <img class="img-logo" src="{{datos.logoURL}}" alt="Argentina Programa #YO PROGRAMO">
     <div id="foto" class="foto">
-        <img class="img-foto" src="{{datos.fotoURLPer}}" alt="Foto Perfil">
+        <img class="img-foto" src="{{datos.fotoURL}}" alt="Foto Perfil">
     </div>
     <div id="presentacion">
         <div class="linea">
-            <h1 id="nombrePerfil">{{datos.nombrePer}} {{datos.apellidoPer}} </h1>
-            <button type="button" class="btn" (click)="actualiza('formPerfil')"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
+            <h1 id="nombrePerfil">{{datos.nombre}} {{datos.apellido}} </h1>
+            <button type="button" class="btn" [style]="visibilidad" (click)="actualiza('formPerfil')"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
         </div>
         <hr>
         <div style="margin: -5px 2% 2%">
             <p id="descripcionPerfil">
-                {{datos.tituloNivelPer}}
+                {{datos.tituloNivel}}
             </p>
             <p id="ubicacionPerfil">
-                {{datos.recidePer}}
+                {{datos.recide}}
             </p>
         </div>
     </div>
 
     <div class="linea">
         <h2>Acerca de</h2>
-        <button type="button" class="btn" (click)="actualiza('formAcerca')"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
+        <button type="button" class="btn" [style]="visibilidad" (click)="actualiza('formAcerca')"><i class="bi bi-pencil" style="color: black;font-size: 2em;"></i></button>
     </div>
     <hr>
-    <p style="margin: -5px 2% 2%">{{datos.acercaPer}}</p>
+    <p style="margin: -5px 2% 2%">{{datos.acerca}}</p>
 
 
     <!-- Form Perfil -->
     <form [formGroup]="formularioPerfil" (ngSubmit)="confirma('formPerfil')" id="formPerfil" class="marco" style="display:none;margin: -5px 2% 2%;">
         <h3>Ingreso datos Perfil</h3>
         <label>Nombre</label>
-        <input type="text" formControlName="nombrePer">
+        <input type="text" formControlName="nombre">
         <label>Apellido</label>
-        <input type="text" formControlName="apellidoPer">
+        <input type="text" formControlName="apellido">
         <label>Titulo Nivel</label>
-        <input type="text" formControlName="tituloNivelPer">
+        <input type="text" formControlName="tituloNivel">
         <label>Fecha Nacimiento</label>
-        <input type="text" formControlName="fnacimientoPer">
+        <input type="text" formControlName="fnacimiento">
         <label>Recide</label>
-        <input type="text" formControlName="recidePer">
+        <input type="text" formControlName="recide">
         <label>E-mail</label>
-        <input type="text" formControlName="emailPer">
+        <input type="text" formControlName="email">
         <label>WhatSapp</label>
-        <input type="text" formControlName="whatsappPer">
+        <input type="text" formControlName="whatsapp">
         <label>Facebook</label>
-        <input type="text" formControlName="facebookPer">
+        <input type="text" formControlName="facebook">
         <label>Foto URL</label>
-        <input type="text" formControlName="fotoURLPer">
+        <input type="text" formControlName="fotoURL">
         <label>Logo URL</label>
-        <input type="text" formControlName="logoURLPer">
+        <input type="text" formControlName="logoURL">
         <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Actualizar</button>
     </form>
 
     <form [formGroup]="formularioPerfil" (ngSubmit)="confirma('formAcerca')" id="formAcerca" class="marco" style="display:none;margin: -5px 2% 2%">
         <h3>Editando Acerca</h3>
-        <input type="text" formControlName="acercaPer">
+        <input type="text" formControlName="acerca">
         <button type="submit" class="btn btn-primary" style="margin-top: 1%;">Actualizar</button>
     </form>
     
-    <!--
-    
-
-
-
-    <div class="botones-perfil">
-        <button type="button" class="btn btn-primary">Tengo interés en</button>
-        <button type="button" class="btn btn-light">Añadir sección</button>
-        <button type="button" class="btn btn-light">Más</button>
-    </div>
-    -->
 </div>
