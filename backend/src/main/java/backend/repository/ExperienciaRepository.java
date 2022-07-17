@@ -1,6 +1,6 @@
 package backend.repository;
 
-import backend.modelo.Experiencia;
+import backend.model.Experiencia;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

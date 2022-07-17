@@ -1,11 +1,13 @@
 package backend.service;
 
-import backend.modelo.Educacion;
+import backend.dto.EducacionDTO;
 import java.util.List;
 
 public interface IEducacionService {
-    public List<Educacion> verEducaciones();
-    public Educacion buscarEducacion(Long id);
-    public Educacion guardarEducacion(Educacion nueva);
-    public void borrarEducacion(Long id);
+    
+    public EducacionDTO crearEducacion(Long personaID, EducacionDTO educacionNueva);
+    public List<EducacionDTO> verEducacionesPorPersona(Long personaID);
+    public EducacionDTO buscarEducacion(Long personaID, Long EducacionID);
+    public EducacionDTO editarEducacion(Long personaID, Long EducacionID, EducacionDTO educacion);
+    public void borrarEducacion(Long personaID, Long EducacionID);
 }

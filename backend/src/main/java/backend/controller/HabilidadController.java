@@ -1,11 +1,13 @@
 package backend.controller;
 
-import backend.modelo.Habilidad;
+import backend.dto.HabilidadDTO;
 import backend.service.HabilidadService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,35 +24,47 @@ import org.springframework.web.bind.annotation.RestController;
 public class HabilidadController {
     
     @Autowired
-    private HabilidadService habService;
+    private HabilidadService habService; 
     
-    @GetMapping("/verHabilidades")
-    public ResponseEntity<List<Habilidad>> verHabilidades(){
-        List<Habilidad> rta = habService.verHabilidades();
+    @GetMapping("/verHabilidades/{personaID}")
+    public ResponseEntity<List<HabilidadDTO>> verHabilidades(@PathVariable("personaID") Long personaID){
+        List<HabilidadDTO> rta = habService.verHabilidadesPorPersona(personaID);
         return new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
-    @PostMapping("/creaHabilidad")
-    public ResponseEntity<Habilidad> crearHabilidad(@RequestBody Habilidad nueva){
-        Habilidad rta = habService.guardarHabilidad(nueva);
+    @GetMapping("/buscarHabilidad/{personaID}/{habilidadID}")
+    public ResponseEntity<HabilidadDTO> buscarHabilidad(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("habilidadID") Long habilidadID){
+        HabilidadDTO rta = habService.buscarHabilidad(personaID,habilidadID);
+        return  new ResponseEntity<>(rta,HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/crearHabilidad/{personaID}")
+    public ResponseEntity<HabilidadDTO> crearHabilidad(
+            @PathVariable("personaID") Long personaID,
+            @Valid @RequestBody HabilidadDTO nueva){
+        HabilidadDTO rta = habService.crearHabilidad(personaID,nueva);
         return new ResponseEntity<>(rta,HttpStatus.CREATED);
     }
     
-    @GetMapping("/buscaHabilidad/{id}")
-    public ResponseEntity <Habilidad> buscaHabilidad(@PathVariable("id") Long id){
-        Habilidad rta = habService.buscarHabilidad(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/editarHabilidad/{personaID}/{habilidadID}")
+    public ResponseEntity<HabilidadDTO> editarHabilidad(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("habilidadID") Long habilidadID,
+            @Valid @RequestBody HabilidadDTO habilidad){
+        HabilidadDTO rta = habService.editarHabilidad(personaID,habilidadID,habilidad);
         return new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
-    @PutMapping("/editaHabilidad")
-    public ResponseEntity<Habilidad> editaHabilidad(@RequestBody Habilidad nueva){
-        Habilidad rta = habService.guardarHabilidad(nueva);
-        return new ResponseEntity<>(rta,HttpStatus.OK);
-    }
-    
-    @DeleteMapping("/borrarHabilidad/{id}")
-    public ResponseEntity<?> borrarHabilidad(@PathVariable("id") Long id){
-        habService.borrarHabilidad(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/borrarHabilidad/{personaID}/{habilidadID}")
+    public ResponseEntity<?> borrarHabilidad(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("habilidadID") Long habilidadID){
+        habService.borrarHabilidad(personaID,habilidadID);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

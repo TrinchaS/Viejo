@@ -1,11 +1,13 @@
 package backend.controller;
 
-import backend.modelo.Educacion;
+import backend.dto.EducacionDTO;
 import backend.service.EducacionService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,41 +23,49 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/educacion")
 public class EducacionController {
     
-    private final EducacionService eduService;
-    
     @Autowired
-    public EducacionController(EducacionService eduService){
-        this.eduService = eduService;
-    }
+    private EducacionService eduService;
     
-    @GetMapping("/verEducaciones")
-    public ResponseEntity<List<Educacion>> verEducaciones(){
-        List<Educacion> rta = eduService.verEducaciones();
+    @GetMapping("/verEducaciones/{personaID}")
+    public ResponseEntity<List<EducacionDTO>> verEducaciones(@PathVariable("personaID") Long personaID){
+        List<EducacionDTO> rta = eduService.verEducacionesPorPersona(personaID);
         return new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
-    @PostMapping("/creaEducacion")
-    public ResponseEntity<Educacion> crearEducacion(@RequestBody Educacion nueva){
-        Educacion rta = eduService.guardarEducacion(nueva);
-        return new ResponseEntity<>(rta,HttpStatus.CREATED);
-    }
-    
-    @GetMapping("/buscaEducacion/{id}")
-    public ResponseEntity<Educacion> buscaEducacion(@PathVariable("id") Long id){
-        Educacion rta = eduService.buscarEducacion(id);
+    @GetMapping("/buscarEducacion/{personaID}/{educacionID}")
+    public ResponseEntity<EducacionDTO> buscarEducacion(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("educacionID") Long educacionID){
+        EducacionDTO rta = eduService.buscarEducacion(personaID,educacionID);
         return  new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
-    @PutMapping("/editaEducacion")
-    public ResponseEntity<Educacion> editaEducacion(@RequestBody Educacion edu){
-        Educacion rta = eduService.guardarEducacion(edu);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/crearEducacion/{personaID}")
+    public ResponseEntity<EducacionDTO> crearEducacion(
+            @PathVariable("personaID") Long personaID,
+            @Valid @RequestBody EducacionDTO nueva){
+        EducacionDTO rta = eduService.crearEducacion(personaID,nueva);
+        return new ResponseEntity<>(rta,HttpStatus.CREATED);
+    }
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/editarEducacion/{personaID}/{educacionID}")
+    public ResponseEntity<EducacionDTO> editaEducacion(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("educacionID") Long educacionID,
+            @Valid @RequestBody EducacionDTO educacion){
+        EducacionDTO rta = eduService.editarEducacion(personaID,educacionID,educacion);
         return new ResponseEntity<>(rta,HttpStatus.OK);
     }    
     
-    @DeleteMapping("/borrarEducacion/{id}")
-    public ResponseEntity<?> borrarEducacion(@PathVariable("id") Long id){
-        eduService.borrarEducacion(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/borrarEducacion/{personaID}/{educacionID}")
+    public ResponseEntity<?> borrarEducacion(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("educacionID") Long educacionID){
+        eduService.borrarEducacion(personaID,educacionID);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    
+ 
 }

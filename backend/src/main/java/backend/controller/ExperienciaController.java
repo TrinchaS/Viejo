@@ -1,11 +1,13 @@
 package backend.controller;
 
-import backend.modelo.Experiencia;
+import backend.dto.ExperienciaDTO;
 import backend.service.ExperienciaService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,40 +23,49 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/experiencia")
 public class ExperienciaController {
     
-    private final ExperienciaService expService; 
-    
     @Autowired
-    public ExperienciaController(ExperienciaService expService){
-        this.expService = expService;
-    }
+    private ExperienciaService expService; 
     
-    @GetMapping("/verExperiencias")
-    public ResponseEntity<List<Experiencia>> verExperiencias(){
-        List<Experiencia> rta = expService.verExperiencias();
+    @GetMapping("/verExperiencias/{personaID}")
+    public ResponseEntity<List<ExperienciaDTO>> verExperiencias(@PathVariable("personaID") Long personaID){
+        List<ExperienciaDTO> rta = expService.verExperienciasPorPersona(personaID);
         return new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
-    @PostMapping("/creaExperiencia")
-    public ResponseEntity<Experiencia> crearExperiencia(@RequestBody Experiencia nueva){
-        Experiencia rta = expService.guardarExperiencia(nueva);
+    @GetMapping("/buscarExperiencia/{personaID}/{experienciaID}")
+    public ResponseEntity<ExperienciaDTO> buscarExperiencia(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("experienciaID") Long experienciaID){
+        ExperienciaDTO rta = expService.buscarExperiencia(personaID,experienciaID);
+        return  new ResponseEntity<>(rta,HttpStatus.OK);
+    }
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/crearExperiencia/{personaID}")
+    public ResponseEntity<ExperienciaDTO> crearExperiencia(
+            @PathVariable("personaID") Long personaID,
+            @Valid @RequestBody ExperienciaDTO nueva){
+        ExperienciaDTO rta = expService.crearExperiencia(personaID,nueva);
         return new ResponseEntity<>(rta,HttpStatus.CREATED);
     }
     
-    @GetMapping("/buscaExperiencia/{id}")
-    public ResponseEntity<Experiencia> buscaExperiencia(@PathVariable("id") Long id){
-        Experiencia rta = expService.buscarExperiencia(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/editarExperiencia/{personaID}/{experienciaID}")
+    public ResponseEntity<ExperienciaDTO> editarExperiencia(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("experienciaID") Long experienciaID,
+            @Valid @RequestBody ExperienciaDTO experiencia){
+        ExperienciaDTO rta = expService.editarExperiencia(personaID,experienciaID,experiencia);
         return new ResponseEntity<>(rta,HttpStatus.OK);
     }
     
-    @PutMapping("/editaExperiencia")
-    public ResponseEntity<Experiencia> editaExperiencia(@RequestBody Experiencia nueva){
-        Experiencia rta = expService.guardarExperiencia(nueva);
-        return new ResponseEntity<>(rta,HttpStatus.OK);
-    }
-    
-    @DeleteMapping("/borrarExperiencia/{id}")
-    public ResponseEntity <?> borrarExperiencia(@PathVariable("id") Long id){
-        expService.borrarExperiencia(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/borrarExperiencia/{personaID}/{experienciaID}")
+    public ResponseEntity<?> borrarExperiencia(
+            @PathVariable("personaID") Long personaID,
+            @PathVariable("experienciaID") Long experienciaID){
+        expService.borrarExperiencia(personaID,experienciaID);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    
 }

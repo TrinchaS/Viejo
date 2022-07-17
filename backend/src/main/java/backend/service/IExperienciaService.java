@@ -1,11 +1,12 @@
 package backend.service;
 
-import backend.modelo.Experiencia;
+import backend.dto.ExperienciaDTO;
 import java.util.List;
 
 public interface IExperienciaService {
-    public List<Experiencia> verExperiencias();
-    public Experiencia buscarExperiencia(Long id);
-    public Experiencia guardarExperiencia(Experiencia nueva);
-    public void borrarExperiencia(Long id);    
+    public ExperienciaDTO crearExperiencia(Long personaID, ExperienciaDTO experienciaNueva);
+    public List<ExperienciaDTO> verExperienciasPorPersona(Long personaID);
+    public ExperienciaDTO buscarExperiencia(Long personaID, Long ExperienciaID);
+    public ExperienciaDTO editarExperiencia(Long personaID, Long experienciaID, ExperienciaDTO experiencia);
+    public void borrarExperiencia(Long personaID, Long experienciaID);    
 }

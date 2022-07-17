@@ -1,41 +1,94 @@
 package backend.service;
 
-import backend.modelo.Persona;
+import backend.dto.PersonaDTO;
+import backend.exceptions.ResourceNotFoundException;
+import backend.model.Persona;
 import backend.repository.PersonaRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
 public class PersonaService implements IPersonaService{
     
-    private final PersonaRepository perRepo;
+    @Autowired
+    private ModelMapper modelMapper;
     
     @Autowired
-    public PersonaService(PersonaRepository perRepo){
-        this.perRepo = perRepo;
-    }
-    
+    private PersonaRepository perRepo;
+
     @Override
-    public List<Persona> verPersonas() {
-        return perRepo.findAll();
+    public PersonaDTO crearPersona(PersonaDTO personaDto) {
+        //convertimos de DTO a entidad
+        Persona persona = this.mapearEntidad(personaDto);
+        
+        Persona personaNueva = this.perRepo.save(persona);
+        
+        //convertimos de entidad a DTO
+        PersonaDTO personaRespuesta = this.mapearDTO(personaNueva);
+                
+        return personaRespuesta;
     }
 
     @Override
-    public Persona buscarPersona(Long id) {
-        return perRepo.findById(id).orElse(null);
+    public List<PersonaDTO> verPersonas() {
+        List<Persona> personas = this.perRepo.findAll();
+        
+        return personas.stream().map(persona -> mapearDTO(persona)).collect(Collectors.toList());
     }
 
     @Override
-    public Persona guardarPersona(Persona nueva) {
-        return perRepo.save(nueva);
+    public PersonaDTO buscarPersona(Long id) {
+        Persona persona = this.perRepo
+                .findById(id).orElseThrow(()-> new ResourceNotFoundException("Persona","id",id));
+        
+        return mapearDTO(persona);
+    }
+
+    @Override
+    public PersonaDTO editarPersona(PersonaDTO persona, Long id) {
+        Persona personaEncontrada = this.perRepo
+                .findById(id).orElseThrow(()-> new ResourceNotFoundException("Persona","id",id));
+        
+        personaEncontrada.setNombre(persona.getNombre());
+        personaEncontrada.setApellido(persona.getApellido());
+        personaEncontrada.setTituloNivel(persona.getTituloNivel());
+        personaEncontrada.setFnacimiento(persona.getFnacimiento());
+        personaEncontrada.setRecide(persona.getRecide());
+        personaEncontrada.setEmail(persona.getEmail());
+        personaEncontrada.setWhatsapp(persona.getWhatsapp());
+        personaEncontrada.setFacebook(persona.getFacebook());
+        personaEncontrada.setFotoURL(persona.getFotoURL());
+        personaEncontrada.setLogoURL(persona.getLogoURL());
+        personaEncontrada.setAcerca(persona.getAcerca());
+        
+        Persona personaActualizada = this.perRepo.save(personaEncontrada);
+        
+        return mapearDTO(personaActualizada);
     }
 
     @Override
     public void borrarPersona(Long id) {
-        perRepo.deleteById(id);
+        Persona personaEncontrada = this.perRepo
+                .findById(id).orElseThrow(()-> new ResourceNotFoundException("Persona","id",id));
+        this.perRepo.delete(personaEncontrada);
+        
+    }
+   
+    //convierte entidad a DTO
+    private PersonaDTO mapearDTO(Persona persona){
+        PersonaDTO personaNueva = this.modelMapper.map(persona, PersonaDTO.class);
+        
+        return personaNueva;
+    }
+    
+    //convierte DTO a Entidad
+    private Persona mapearEntidad(PersonaDTO persona){
+        Persona personaNueva = this.modelMapper.map(persona, Persona.class);
+        
+        return personaNueva;
     }
     
 }

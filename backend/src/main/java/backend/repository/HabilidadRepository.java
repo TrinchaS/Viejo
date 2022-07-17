@@ -1,6 +1,6 @@
 package backend.repository;
 
-import backend.modelo.Habilidad;
+import backend.model.Habilidad;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
