@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { persona } from 'src/app/model/persona.model';
 import { PersonaService } from 'src/app/service/persona.service';
 import { TokenService } from 'src/app/service/token.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-persona',
@@ -12,6 +11,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./persona.component.css']
 })
 export class PersonaComponent implements OnInit {
+
+  idPersona:string = '1';
   
   visibilidad :string = "display:none;";
 
@@ -44,9 +45,9 @@ export class PersonaComponent implements OnInit {
       this.visibilidad = "display:none;";
     }
   }
-
+ 
   getPersona(){
-    this.perService.getPersona(environment.idPersona).subscribe({
+    this.perService.getPersona(this.idPersona).subscribe({
       next: (response: persona) => {
         this.datos = response;
       },
@@ -84,7 +85,7 @@ export class PersonaComponent implements OnInit {
     this.muestraOculta(valorId);
   }
 
-  confirma(valorId:string){
+  confirma(formulario:string){
     let nuevo : persona = new persona (
       this.formularioPerfil.controls['nombre'].value,
       this.formularioPerfil.controls['apellido'].value,
@@ -100,7 +101,7 @@ export class PersonaComponent implements OnInit {
       this.datos.id
     )
 
-    this.perService.updatePersona(environment.idPersona, nuevo).subscribe({
+    this.perService.updatePersona(this.idPersona, nuevo).subscribe({
       next: (response: persona) => {
         this.getPersona();
       },
@@ -109,7 +110,7 @@ export class PersonaComponent implements OnInit {
       }
     })
 
-    this.muestraOculta(valorId);
+    this.muestraOculta(formulario);
   }
   
 }

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { persona } from 'src/app/model/persona.model';
 import { PersonaService } from 'src/app/service/persona.service';
 import { TokenService } from 'src/app/service/token.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-menu',
@@ -12,6 +11,8 @@ import { environment } from 'src/environments/environment';
 })
 export class MenuComponent implements OnInit {
 
+  idPersona:string = '1';
+
   isLogged: Boolean = false;
 
   datos :persona = new persona("","","","","","","","","","","");
@@ -19,7 +20,7 @@ export class MenuComponent implements OnInit {
   constructor(public perService :PersonaService, private router :Router, private token :TokenService) { }
 
   ngOnInit(): void {
-    this.perService.getPersona(environment.idPersona).subscribe(data => {this.datos = data});
+    this.perService.getPersona(this.idPersona).subscribe(data => {this.datos = data});
     
     if(this.token.getToken()){
       this.isLogged=true;

@@ -1,14 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { habilidad } from '../model/habilidad.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HabilidadService {
-  private apiServerURL = environment.apiBaseURL;
+  private apiBaseURL :string = 'https://portfolio-cesarodrullan.herokuapp.com';
+
+  private apiServerURL = this.apiBaseURL;
 
   constructor(private http :HttpClient) {}
 

@@ -5,7 +5,6 @@ import { finalize } from 'rxjs';
 import { proyecto } from 'src/app/model/proyecto.model';
 import { ProyectoService } from 'src/app/service/proyecto.service';
 import { TokenService } from 'src/app/service/token.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-proyectos',
@@ -13,6 +12,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./proyectos.component.css']
 })
 export class ProyectosComponent implements OnInit{
+
+  idPersona:string = '1';
 
   visibilidad :string = "display:none;";
   ocutalParaEliminar :string = "display:block;";
@@ -46,7 +47,7 @@ export class ProyectosComponent implements OnInit{
   }
 
   getProyecto(){
-    this.proService.allProyecto(environment.idPersona).subscribe({
+    this.proService.allProyecto(this.idPersona).subscribe({
       next:(response: proyecto[])=>{
         this.datos=response;
       },
@@ -118,7 +119,7 @@ export class ProyectosComponent implements OnInit{
     let tituloForm = document.getElementById("tituloFormPro");
     tituloForm!.innerText="Eliminar";
     let muestraElimina = document.getElementById("muestraEliminaPro");
-    this.proService.getProyecto(environment.idPersona,id.toString()).subscribe({
+    this.proService.getProyecto(this.idPersona,id.toString()).subscribe({
       next: (response: proyecto) => {
         muestraElimina!.innerText=response.nombre;
       },
@@ -182,7 +183,7 @@ export class ProyectosComponent implements OnInit{
       this.formularioProyecto.controls['url'].value,
       this.formularioProyecto.controls['descripcion'].value
     );
-    this.proService.addProyecto(environment.idPersona, pro).subscribe({
+    this.proService.addProyecto(this.idPersona, pro).subscribe({
       next: (response: proyecto) => {
         //console.log(response);
         this.getProyecto();
@@ -200,7 +201,7 @@ export class ProyectosComponent implements OnInit{
       this.formularioProyecto.controls['descripcion'].value,
       this.estadoIdPro
     );
-    this.proService.updateProyecto(environment.idPersona, this.estadoIdPro.toString(), pro).subscribe({
+    this.proService.updateProyecto(this.idPersona, this.estadoIdPro.toString(), pro).subscribe({
       next: (response: proyecto) => {
         //console.log(response);
         this.getProyecto();
@@ -212,7 +213,7 @@ export class ProyectosComponent implements OnInit{
   }
 
   confirmaElimina(){
-    this.proService.deleteProyecto(environment.idPersona, this.estadoIdPro.toString())
+    this.proService.deleteProyecto(this.idPersona, this.estadoIdPro.toString())
     .pipe(finalize(()=>this.getProyecto())).subscribe({
       next: (response: void) => {
         //console.log(response);

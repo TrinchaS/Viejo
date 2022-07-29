@@ -13,6 +13,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./habilidades.component.css']
 })
 export class HabilidadesComponent implements OnInit {
+
+  idPersona:string = '1';
   
   visibilidad :string = "display:none;";
   ocutalParaEliminar :string = "display:block;";
@@ -45,7 +47,7 @@ export class HabilidadesComponent implements OnInit {
   }
 
   getHabilidad(){
-    this.habService.allHabilidad(environment.idPersona).subscribe({
+    this.habService.allHabilidad(this.idPersona).subscribe({
       next:(Response: habilidad[])=>{
         this.datos=Response;
       },
@@ -117,7 +119,7 @@ export class HabilidadesComponent implements OnInit {
     let tituloForm = document.getElementById("tituloFormHab");
     tituloForm!.innerText="Eliminar";
     let muestraElimina = document.getElementById("muestraEliminaHab");
-    this.habService.getHabilidad(environment.idPersona,id.toString()).subscribe({
+    this.habService.getHabilidad(this.idPersona,id.toString()).subscribe({
       next: (response: habilidad) => {
         muestraElimina!.innerText=response.nombre;
       },
@@ -179,7 +181,7 @@ export class HabilidadesComponent implements OnInit {
       this.formularioHabilidad.controls['nombre'].value,
       this.formularioHabilidad.controls['porcentaje'].value
     );
-    this.habService.addHabilidad(environment.idPersona, hab).subscribe({
+    this.habService.addHabilidad(this.idPersona, hab).subscribe({
       next: (response: habilidad) => {
         //console.log(response);
         this.getHabilidad();
@@ -197,7 +199,7 @@ export class HabilidadesComponent implements OnInit {
       this.estadoIdHab
     );
   
-    this.habService.updateHabilidad(environment.idPersona, this.estadoIdHab.toString(), hab).subscribe({
+    this.habService.updateHabilidad(this.idPersona, this.estadoIdHab.toString(), hab).subscribe({
       next: (response: habilidad) => {
         //console.log(response);
         this.getHabilidad();
@@ -209,7 +211,7 @@ export class HabilidadesComponent implements OnInit {
   }
 
   confirmaElimina(){
-    this.habService.deleteHabilidad(environment.idPersona, this.estadoIdHab.toString())
+    this.habService.deleteHabilidad(this.idPersona, this.estadoIdHab.toString())
     .pipe(finalize(()=>this.getHabilidad())).subscribe({
       next: (response: String) => {
         //console.log(response);

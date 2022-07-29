@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'src/environments/environment';
 import { Login } from '../model/login';
 import { TokenDTO } from '../model/tokenDTO';
 import { Usuario } from '../model/usuario';
@@ -10,7 +9,9 @@ import { Usuario } from '../model/usuario';
   providedIn: 'root'
 })
 export class AuthService {
-  authURL = environment.apiBaseURL + '/auth';
+  apiBaseURL :string = 'https://portfolio-cesarodrullan.herokuapp.com';
+
+  authURL = this.apiBaseURL + '/auth';
 
   constructor(private httpCliente: HttpClient) {}
 

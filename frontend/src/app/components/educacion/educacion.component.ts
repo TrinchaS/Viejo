@@ -5,7 +5,6 @@ import { finalize } from 'rxjs';
 import { educacion } from 'src/app/model/educacion.model';
 import { EducacionService } from 'src/app/service/educacion.service';
 import { TokenService } from 'src/app/service/token.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-educacion',
@@ -13,6 +12,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./educacion.component.css']
 })
 export class EducacionComponent implements OnInit {
+
+  idPersona:string = '1';
 
   visibilidad :string = "display:none;";
   ocutalParaEliminar :string = "display:block;";
@@ -50,7 +51,7 @@ export class EducacionComponent implements OnInit {
   }
 
   public getEducacion(){
-    this.eduService.allEducacion(environment.idPersona).subscribe({
+    this.eduService.allEducacion(this.idPersona).subscribe({
       next:(Response: educacion[])=>{
         this.datos=Response;
       },
@@ -122,7 +123,7 @@ export class EducacionComponent implements OnInit {
     let tituloForm = document.getElementById("tituloFormEdu");
     tituloForm!.innerText="Eliminar";
     let muestraElimina = document.getElementById("muestraEliminaEdu");
-    this.eduService.getEducacion(environment.idPersona,id.toString()).subscribe({
+    this.eduService.getEducacion(this.idPersona,id.toString()).subscribe({
       next: (response: educacion) => {
         muestraElimina!.innerText=response.titulo;
       },
@@ -182,7 +183,7 @@ export class EducacionComponent implements OnInit {
   }
 
   confirmaElimina(){
-    this.eduService.deleteEducacion(environment.idPersona,this.estadoIdEdu.toString())
+    this.eduService.deleteEducacion(this.idPersona,this.estadoIdEdu.toString())
     .pipe(finalize(()=>this.getEducacion())).subscribe({
       next: (response: void) => {
         //console.log(response);
@@ -201,7 +202,7 @@ export class EducacionComponent implements OnInit {
       this.formularioEducacion.controls['fegreso'].value,
       this.estadoIdEdu);
 
-    this.eduService.updateEducacion(environment.idPersona,this.estadoIdEdu.toString(), edu).subscribe({
+    this.eduService.updateEducacion(this.idPersona,this.estadoIdEdu.toString(), edu).subscribe({
       next: (response: educacion) => {
         //console.log(response);
         this.getEducacion();
@@ -220,7 +221,7 @@ export class EducacionComponent implements OnInit {
       this.formularioEducacion.controls['fegreso'].value,
     );
 
-    this.eduService.addEducacion(environment.idPersona,edu).subscribe({
+    this.eduService.addEducacion(this.idPersona,edu).subscribe({
       next: (response: educacion) => {
         //console.log(response);
         this.getEducacion();

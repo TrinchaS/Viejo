@@ -15,6 +15,8 @@ import { environment } from 'src/environments/environment';
 
 export class ExperienciaComponent implements OnInit {
 
+  idPersona:string = '1';
+
   visibilidad :string = "display:none;";
   ocutalParaEliminar :string = "display:block;";
   muestraParaEliminar :string = "display:none;";
@@ -52,7 +54,7 @@ export class ExperienciaComponent implements OnInit {
   }
 
   getExperiencia(){
-    this.expService.allExperiencia(environment.idPersona).subscribe({
+    this.expService.allExperiencia(this.idPersona).subscribe({
       next:(response: experiencia[])=>{
         this.datos=response;
       },
@@ -124,7 +126,7 @@ export class ExperienciaComponent implements OnInit {
     let tituloForm = document.getElementById("tituloFormExp");
     tituloForm!.innerText="Eliminar";
     let muestraElimina = document.getElementById("muestraEliminaExp");
-    this.expService.getExperiencia(environment.idPersona,id.toString()).subscribe({
+    this.expService.getExperiencia(this.idPersona,id.toString()).subscribe({
       next: (response: experiencia) => {
         muestraElimina!.innerText=response.puesto;
       },
@@ -204,7 +206,7 @@ export class ExperienciaComponent implements OnInit {
       this.formularioExperiencia.controls['pais'].value,
       this.formularioExperiencia.controls['descripcion'].value
     );
-    this.expService.addExperiencia(environment.idPersona, exp).subscribe({
+    this.expService.addExperiencia(this.idPersona, exp).subscribe({
       next: (response: experiencia) => {
         //console.log(response);
         this.getExperiencia();
@@ -227,7 +229,7 @@ export class ExperienciaComponent implements OnInit {
       this.formularioExperiencia.controls['descripcion'].value,
       this.estadoIdExp
     );
-    this.expService.updateExperiencia(environment.idPersona,this.estadoIdExp.toString(), exp).subscribe({
+    this.expService.updateExperiencia(this.idPersona,this.estadoIdExp.toString(), exp).subscribe({
       next: (response: experiencia) => {
         //console.log(response);
         this.getExperiencia();
@@ -239,7 +241,7 @@ export class ExperienciaComponent implements OnInit {
   }
   
   confirmaElimina(){
-    this.expService.deleteExperiencia(environment.idPersona, this.estadoIdExp.toString())
+    this.expService.deleteExperiencia(this.idPersona, this.estadoIdExp.toString())
     .pipe(finalize(()=>this.getExperiencia())).subscribe({
       next: (response: void) => {
         //console.log(response);
